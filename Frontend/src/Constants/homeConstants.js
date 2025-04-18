@@ -19,7 +19,7 @@ import Vector5 from "../assets/Home/Vector5.png";
 
 export const VehicleData = [
   {
-    name: "Two Wheelers",
+    name: "Book a parcel",
     icon: Bike,
   },
   {
