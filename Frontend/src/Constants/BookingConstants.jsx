@@ -21,6 +21,11 @@ export const AllForms = [
 
 export const AvailableDeliveryPartner = [
   {
+    name: "Riders Kart",
+    deliveryTime: "24 Sep - 25 Sep",
+    price: 48,
+  },
+  {
     name: "Xpressbees",
     deliveryTime: "24 Sep - 25 Sep",
     price: 110,

@@ -3,7 +3,6 @@ import Card from "../../Components/Card";
 import ButtonWrapper from "../../Components/Buttons";
 import { FetchData } from "../../utility/fetchFromAPI";
 import { alertError, alertSuccess } from "../../utility/Alert";
-import { razorpay_key_id } from "../../../env";
 
 const Wallet = () => {
   const [wallet, setWallet] = useState({
@@ -29,7 +28,7 @@ const Wallet = () => {
     console.log(order);
 
     var options = {
-      key: razorpay_key_id,
+      key: process.env.razorpay_key_id,
       subscription_id: order.id,
       name: "Acme Corp.",
       description: "Monthly Test Plan",

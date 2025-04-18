@@ -4,8 +4,6 @@ import ButtonWrapper from "../../../Components/Buttons";
 import { useParams } from "react-router-dom";
 import { useEffect, useState } from "react";
 import { FetchData } from "../../../utility/fetchFromAPI";
-import Lottie from "lottie-react";
-import Loading from "../../../assets/Loading/Loading.json";
 import Loader from "../../../Components/Loader";
 
 export default function CurrentProduct() {
@@ -29,7 +27,7 @@ export default function CurrentProduct() {
   }, []);
 
   return !currentOrder ? (
-    <Loader/>
+    <Loader />
   ) : (
     <div className="min-h-screen bg-gray-100 p-4 phone:p-6 lg:p-8">
       <div className="max-w-[80vw] mx-auto">
@@ -49,7 +47,7 @@ export default function CurrentProduct() {
               <div>
                 <p className="font-semibold">{currentOrder?.sender?.name}</p>
                 <p className="text-sm text-gray-500">
-                  Address: {currentOrder?.sender?.houseAddress}
+                  Address: {currentOrder?.sender?.address}
                 </p>
                 <p className="text-sm text-gray-500">
                   {currentOrder?.sender?.number}
@@ -67,7 +65,7 @@ export default function CurrentProduct() {
               <div>
                 <p className="font-semibold">{currentOrder?.receiver?.name}</p>
                 <p className="text-sm text-gray-500">
-                  Address: {currentOrder?.receiver?.houseAddress}
+                  Address: {currentOrder?.receiver?.address}
                 </p>
                 <p className="text-sm text-gray-500">
                   {currentOrder?.receiver?.number}

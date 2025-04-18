@@ -5,6 +5,9 @@ import {
   LogOutUser,
   regenerateRefreshToken,
   GetUserDetails,
+  RequestForAPIKey,
+  GetMyAllAPIKeys,
+  DeactivateMyAPIKey,
 } from "../controllers/user.controller.js";
 import { VerifyUser } from "../middlewares/auth.middleware.js";
 import { GetPaymentHistory } from "../controllers/payment.controller.js";
@@ -25,5 +28,11 @@ router.route("/user/get-user-details/:userId").get(GetUserDetails);
 router
   .route("/paymentTransaction/:transactionId/:userId")
   .get(GetPaymentHistory);
+
+router
+  .route("/api-key/:apiKeyId")
+  .get(VerifyUser, GetMyAllAPIKeys)
+  .post(VerifyUser, RequestForAPIKey)
+  .delete(VerifyUser, DeactivateMyAPIKey);
 
 export default router;

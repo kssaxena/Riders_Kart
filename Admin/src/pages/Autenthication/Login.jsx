@@ -2,18 +2,21 @@ import React, { useState, useRef } from "react";
 import ButtonWrapper from "../../Components/Buttons";
 import Input from "../../Components/Input";
 import { FetchData } from "../../Utils/fetchFromAPI";
+import { useDispatch } from "react-redux";
+import { addUser } from "../../Utils/Slice/UserInfoSlice";
 
 const Login = () => {
-  const [email, setemail] = useState("");
+  const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState(null);
+  const Dispatch = useDispatch();
 
   const formRef = useRef(null);
 
-  const handleemailChange = (e) => {
+  const handleEmailChange = (e) => {
     console.log("Email:", e.target.value);
-    setemail(e.target.value);
+    setEmail(e.target.value);
   };
 
   const handlePasswordChange = (e) => {
@@ -36,11 +39,23 @@ const Login = () => {
 
     try {
       const response = await FetchData("admin/login", "post", data);
-      if (response && response.data) {
-        localStorage.setItem("AccessToken", response.data.token);
-        window.location.href = "/home";
-      }
+      // if (response && response.data) {
+      // }
+      console.log("Login response:", response);
+      localStorage.setItem(
+        "AccessToken",
+        response.data.data.tokens.AccessToken
+      );
+      localStorage.setItem(
+        "RefreshToken",
+        response.data.data.tokens.RefreshToken
+      );
+
+      Dispatch(addUser(response.data.data.Admin));
+
+      window.location.href = "/home/All_Orders";
     } catch (error) {
+      console.error("Login error:", error);
       setError("Login failed, please try again.");
     } finally {
       setLoading(false);
@@ -62,7 +77,7 @@ const Login = () => {
                 type="email"
                 placeholder="Email"
                 value={email}
-                onChange={handleemailChange}
+                onChange={handleEmailChange}
               />
               <Input
                 name="password"

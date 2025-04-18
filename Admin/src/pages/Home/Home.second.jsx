@@ -1,24 +1,28 @@
 import React, { useEffect, useRef, useState } from "react";
 import { initialSections } from "../../Constants/Home.constant";
 import { FetchData } from "../../Utils/fetchFromAPI";
-import { Link } from "react-router-dom";
+import { Link, useParams } from "react-router-dom";
 import { alertSuccess } from "../../Utils/Alert";
+import { useSelector } from "react-redux";
+import { truncateString } from "../../Utils/Utility-functions";
+import ApiKeyCard from "../../Components/apiCard";
+import PopUp from "../../Components/PopUpWrapper";
 
 const Home2 = () => {
   const offerFormRef = useRef(null);
   const [sections, setSections] = useState(initialSections);
-  const [selectedSection, setSelectedSection] = useState("All Orders");
+  const { sec } = useParams();
+  const [selectedSection, setSelectedSection] = useState(sec ?? "All_Orders");
   const [searchQuery, setSearchQuery] = useState("");
   const [statusFilter, setStatusFilter] = useState("");
   const [offerFilter, setOfferFilter] = useState("");
+  const [startDate, setStartDate] = useState("");
+  const [endDate, setEndDate] = useState("");
   const [showOfferForm, setShowOfferForm] = useState(false);
-  // const [offerForm, setOfferForm] = useState({
-  //   offerName: "",
-  //   offerDescription: "",
-  //   offerPrice: "",
-  //   offerPercentage: "",
-  //   offerValidity: Date,
-  // });
+  const [vehicleFilter, setVehicleFilter] = useState("");
+  const [apiDetails, setApiDetails] = useState(null);
+
+  const user = useSelector((store) => store.UserInfo.user);
 
   const offerFormInputs = [
     { title: "offerName", type: "text" },
@@ -27,14 +31,6 @@ const Home2 = () => {
     { title: "offerPercentage", type: "number" },
     { title: "offerValidity", type: "date" },
   ];
-
-  const formData = new FormData();
-  const testArray = ["value1", "value2", "value3"]; // Method 1: Append each element individuallytestArray.forEach((value) => {  formData.append('myArray[]', value);});// Method 2: Append as a JSON stringformData.append('myArray', JSON.stringify(testArray));
-
-  // const handleFormChange = (e) => {
-  //   const { name, value } = e.target;
-  //   setOfferForm((prev) => ({ ...prev, [name]: value }));
-  // };
 
   const handleOfferFormSubmit = async (e) => {
     e.preventDefault();
@@ -73,11 +69,9 @@ const Home2 = () => {
     }
   };
 
-  const handleOfferFormCancel = () => {};
-
   const userProfile = {
-    name: "John Doe",
-    profileImage: "https://via.placeholder.com/40",
+    name: user?.name || "Admin",
+    profileImage: "",
   };
 
   // console.log("Header")
@@ -92,7 +86,8 @@ const Home2 = () => {
     const ampm = hours >= 12 ? "PM" : "AM";
     hours = hours % 12 || 12;
     hours = String(hours).padStart(2, "0");
-    return `${year}-${month}-${day} ${hours}:${minutes} ${ampm}`;
+    return `${day}-${month}-${year}`;
+    // return `${day}-${month}-${year} ${hours}:${minutes} ${ampm}`;
   }
 
   useEffect(() => {
@@ -100,14 +95,15 @@ const Home2 = () => {
       const Response = await FetchData("admin/order/get-all-order", "get");
       const data = Response?.data?.data;
 
-      // console.log(data);
+      console.log(Response);
 
       if (Array.isArray(data)) {
         setSections((prevSections) => ({
           ...prevSections,
           All_Orders: {
             ...prevSections.All_Orders,
-            tableData: data.map((order) => ({
+            tableData: data.map((order, i) => ({
+              Sl_No: i + 1,
               BookingId: order._id,
               field: "orders",
               User_id: order.user,
@@ -132,7 +128,8 @@ const Home2 = () => {
           ...prevSections,
           Users: {
             ...prevSections.Users,
-            tableData: data.map((user) => ({
+            tableData: data.map((user, i) => ({
+              Sl_No: i + 1,
               UserId: user._id,
               field: "users",
               Name: user.name,
@@ -159,7 +156,8 @@ const Home2 = () => {
           ...prevSections,
           DeliveryPartner: {
             ...prevSections.DeliveryPartner,
-            tableData: data.map((partner) => ({
+            tableData: data.map((partner, i) => ({
+              Sl_No: i + 1,
               RequestId: partner._id,
               field: "pendingRequests",
               Name: partner.name,
@@ -187,7 +185,8 @@ const Home2 = () => {
           ...prevSections,
           VerifiedDeliveryPartner: {
             ...prevSections.VerifiedDeliveryPartner,
-            tableData: data.map((partner) => ({
+            tableData: data.map((partner, i) => ({
+              Sl_No: i + 1,
               PartnerId: partner._id,
               field: "verifiedPartners",
               Name: partner.name,
@@ -202,10 +201,37 @@ const Home2 = () => {
       }
     };
 
+    const fetchAPIData = async () => {
+      const Response = await FetchData("admin/api-key/", "get");
+      const data = Response?.data?.data;
+
+      console.log(Response);
+      if (Array.isArray(data)) {
+        setSections((prevSections) => ({
+          ...prevSections,
+          ApiKey: {
+            ...prevSections.ApiKey,
+            tableData: data.map((api, i) => ({
+              Sl_No: i + 1,
+              key: api.key,
+              type: api.type,
+              user: api.user.name,
+              status: api.status,
+              expiry: formatDate(api.expiresAt),
+              createdAt: formatDate(api.createdAt),
+            })),
+          },
+        }));
+      } else {
+        console.error("Expected an array but got:", data);
+      }
+    };
+
     fetchAllOrders();
     fetchUsers();
     fetchDeliveryPartners();
     fetchVerifiedDeliveryPartners();
+    fetchAPIData();
   }, []);
 
   const OfferFilteredData = sections[selectedSection]?.tableData.filter(
@@ -216,18 +242,37 @@ const Home2 = () => {
 
       const matchesStatusFilter =
         selectedSection === "All_Orders" && statusFilter
-          ? row.Status?.toLowerCase().includes(statusFilter.toLowerCase())
+          ? row.Status?.toLowerCase() === statusFilter.toLowerCase()
           : true;
 
       const matchesOfferFilter =
-        selectedSection === "All_Orders" && offerFilter === "offer"
-          ? row.allOrders >= 10 &&
-            new Date() - new Date(row.Date) <= 10 * 24 * 60 * 60 * 1000
+        selectedSection === "Users" && offerFilter === "offer"
+          ? row.allOrders >= 10
           : true;
 
-      return matchesSearchQuery && matchesStatusFilter && matchesOfferFilter;
+      const matchesDateFilter =
+        startDate && endDate
+          ? new Date(row.Date?.split("-").reverse().join("-")) >=
+              new Date(startDate) &&
+            new Date(row.Date?.split("-").reverse().join("-")) <=
+              new Date(endDate)
+          : true;
+
+      const matchesVehicleFilter =
+        selectedSection === "VerifiedDeliveryPartner" && vehicleFilter
+          ? row.vehicleType?.toLowerCase() === vehicleFilter.toLowerCase()
+          : true;
+
+      return (
+        matchesSearchQuery &&
+        matchesStatusFilter &&
+        matchesOfferFilter &&
+        matchesDateFilter &&
+        matchesVehicleFilter
+      );
     }
   );
+
   const extractUserIds = (filteredData) => {
     // Use a Set to avoid duplicate user IDs
     const userIds = new Set();
@@ -238,8 +283,6 @@ const Home2 = () => {
     // Convert Set back to Array if required
     return Array.from(userIds);
   };
-
-  // console.log(OfferFilteredData);
 
   return (
     <div>
@@ -258,7 +301,7 @@ const Home2 = () => {
       </header>
 
       <div className="flex">
-        <aside className="w-1/4 h-screen fixed overflow-hidden bg-gray-100 text-gray-800 p-6 shadow-lg">
+        <aside className="w-fit h-screen fixed overflow-hidden bg-gray-100 text-gray-800 p-6 shadow-lg">
           <h2 className="text-2xl mb-8 font-bold">Dashboard</h2>
           <nav>
             <ul className="space-y-4">
@@ -280,27 +323,36 @@ const Home2 = () => {
           </nav>
         </aside>
 
-        <main className="flex-1 p-10 overflow-y-hidden pl-96 mt-20 ml-10">
+        <main className="flex-1 p-10 overflow-y-hidden pl-80 mt-20">
           {sections[selectedSection] && (
             <section>
-              <h2 className="text-xl font-semibold mb-4">
-                {sections[selectedSection].title}
-              </h2>
-              <p className="text-gray-600 mb-4">
-                {sections[selectedSection].description}
-              </p>
+              <div className="grid grid-cols-2 grid-rows-2 gap-4">
+                <h2 className="text-xl font-semibold mb-4">
+                  {sections[selectedSection].title}
+                </h2>
+                {selectedSection != "All_Orders" && (
+                  <span className="text-xl font-semibold ">
+                    Total: {sections[selectedSection].tableData.length}
+                  </span>
+                )}
+                <p className="text-gray-600 mb-4 col-span-2">
+                  {sections[selectedSection].description}
+                </p>
+              </div>
 
               {selectedSection === "All_Orders" && (
                 <div className="mb-4">
-                  <input
-                    type="text"
-                    value={searchQuery}
-                    onChange={(e) => setSearchQuery(e.target.value)}
-                    placeholder="Search by Booking ID or Contact Number"
-                    className="p-2 border border-gray-300 rounded-lg w-full mb-2"
-                  />
+                  <div className="input_for_search">
+                    <input
+                      type="text"
+                      value={searchQuery}
+                      onChange={(e) => setSearchQuery(e.target.value)}
+                      placeholder="Search by Booking ID or Contact Number"
+                      className="p-2 border border-gray-300 rounded-lg w-full mb-2"
+                    />
+                  </div>
 
-                  <div>
+                  <div className="Filter_by_Status">
                     <label htmlFor="statusFilter" className="mr-2">
                       Filter by Status:
                     </label>
@@ -311,13 +363,14 @@ const Home2 = () => {
                       className="p-2 border border-gray-300 rounded-lg"
                     >
                       <option value="">All</option>
-                      <option value="created">Created</option>
+                      <option value="created">New</option>
                       <option value="in-progress">In Progress</option>
                       <option value="cancelled">Cancelled</option>
+                      <option value="cancelled">Delivered</option>
                     </select>
                   </div>
 
-                  <div className="mt-4">
+                  <div className="offer_filter_and_button mt-4">
                     <label htmlFor="offerFilter" className="mr-2">
                       Filter by Offers:
                     </label>
@@ -333,13 +386,128 @@ const Home2 = () => {
                         Eligible Users for Offer
                       </option>
                     </select>
+                    <button
+                      className="mx-5 px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700"
+                      onClick={() => setShowOfferForm(true)}
+                    >
+                      Generate Offer
+                    </button>
                   </div>
-                  <button
-                    className="px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700"
-                    onClick={() => setShowOfferForm(true)}
-                  >
-                    Generate Offer
-                  </button>
+
+                  <div className="Filter_by_DateRange flex items-center gap-2 mt-5">
+                    <label className="mr-2">Filter by Date:</label>
+                    <input
+                      type="date"
+                      value={startDate}
+                      onChange={(e) => setStartDate(e.target.value)}
+                      className="p-2 border border-gray-300 rounded-lg"
+                    />
+                    <span>to</span>
+                    <input
+                      type="date"
+                      value={endDate}
+                      onChange={(e) => setEndDate(e.target.value)}
+                      className="p-2 border border-gray-300 rounded-lg"
+                    />
+                  </div>
+                </div>
+              )}
+              {selectedSection === "Users" && (
+                <div className="mb-4">
+                  <input
+                    type="text"
+                    value={searchQuery}
+                    onChange={(e) => setSearchQuery(e.target.value)}
+                    placeholder="Search by User ID or Email"
+                    className="p-2 border border-gray-300 rounded-lg w-full mb-2"
+                  />
+
+                  <div className="offer_filter_and_button mt-4">
+                    <label htmlFor="offerFilter" className="mr-2">
+                      Filter by Offers:
+                    </label>
+                    <select
+                      id="offerFilter"
+                      value={offerFilter}
+                      onChange={(e) => setOfferFilter(e.target.value)}
+                      className="p-2 border border-gray-300 rounded-lg"
+                    >
+                      <option value="">All</option>
+                      <option value="offer">
+                        {/* Offers (Orders ≥ 10 & Days ≤ 10) */}
+                        Eligible Users for Offer
+                      </option>
+                    </select>
+                    <button
+                      className="mx-5 px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700"
+                      onClick={() => setShowOfferForm(true)}
+                    >
+                      Generate Offer
+                    </button>
+                  </div>
+                </div>
+              )}
+              {selectedSection === "DeliveryPartner" && (
+                <div className="mb-4">
+                  <input
+                    type="text"
+                    value={searchQuery}
+                    onChange={(e) => setSearchQuery(e.target.value)}
+                    placeholder="Search by User ID or Email"
+                    className="p-2 border border-gray-300 rounded-lg w-full mb-2"
+                  />
+                </div>
+              )}
+              {selectedSection === "VerifiedDeliveryPartner" && (
+                <div className="mb-4">
+                  <input
+                    type="text"
+                    value={searchQuery}
+                    onChange={(e) => setSearchQuery(e.target.value)}
+                    placeholder="Search by User ID or Email"
+                    className="p-2 border border-gray-300 rounded-lg w-full mb-2"
+                  />
+
+                  <div className="offer_filter_and_button mt-4">
+                    <label htmlFor="offerFilter" className="mr-2">
+                      Filter by Offers:
+                    </label>
+                    <select
+                      id="offerFilter"
+                      value={offerFilter}
+                      onChange={(e) => setOfferFilter(e.target.value)}
+                      className="p-2 border border-gray-300 rounded-lg"
+                    >
+                      <option value="">All</option>
+                      <option value="offer">
+                        {/* Offers (Orders ≥ 10 & Days ≤ 10) */}
+                        Eligible Users for Offer
+                      </option>
+                    </select>
+                    <button
+                      className="mx-5 px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700"
+                      onClick={() => setShowOfferForm(true)}
+                    >
+                      Generate Offer
+                    </button>
+                  </div>
+                  <div className="Filter_by_Status mt-4 ">
+                    <label htmlFor="statusFilter" className="mr-2">
+                      Filter by vehicle type:
+                    </label>
+                    <select
+                      id="statusFilter"
+                      value={vehicleFilter}
+                      onChange={(e) => setVehicleFilter(e.target.value)}
+                      className="p-2 border border-gray-300 rounded-lg"
+                    >
+                      <option value="">All</option>
+                      <option value="created">Bike</option>
+                      <option value="in-progress">Electric Bike</option>
+                      <option value="cancelled">Truck</option>
+                      <option value="cancelled">Scooty</option>
+                    </select>
+                  </div>
                 </div>
               )}
 
@@ -364,37 +532,84 @@ const Home2 = () => {
                         index % 2 === 0 ? "bg-gray-100" : "bg-white"
                       }`}
                     >
-                      {Object.values(row).map((cell, i) => (
-                        <td
-                          key={i}
-                          className="px-4 py-2 border border-gray-300 text-center"
-                        >
-                          {selectedSection === "All_Orders" && (
-                            <Link to={`/current-order/${row.BookingId}`}>
+                      {selectedSection === "All_Orders" &&
+                        Object.values(row).map((cell, i) => (
+                          <td
+                            key={i}
+                            className="px-1 py-1 border border-gray-300 text-center "
+                          >
+                            <Link
+                              to={`/current-order/${row.BookingId}`}
+                              className="hover:text-blue-500 hover:underline hover:underline-cyan-500"
+                            >
                               {cell}
                             </Link>
-                          )}
-                          {selectedSection === "Users" && (
-                            <Link to={`/current-user/${row.UserId}`}>
+                          </td>
+                        ))}
+                      {selectedSection === "Users" &&
+                        Object.values(row).map((cell, i) => (
+                          <td
+                            key={i}
+                            className="px-1 py-1 border border-gray-300 text-center "
+                          >
+                            <Link
+                              to={`/current-user/${row.UserId}`}
+                              className="hover:text-blue-500 hover:underline hover:underline-cyan-500"
+                            >
                               {cell}
                             </Link>
-                          )}
-                          {selectedSection === "DeliveryPartner" && (
+                          </td>
+                        ))}
+                      {selectedSection === "DeliveryPartner" &&
+                        Object.values(row).map((cell, i) => (
+                          <td
+                            key={i}
+                            className="px-1 py-1 border border-gray-300 text-center "
+                          >
                             <Link
                               to={`/current-pending-request/${row.RequestId}`}
+                              className="hover:text-blue-500 hover:underline hover:underline-cyan-500"
                             >
                               {cell}
                             </Link>
-                          )}
-                          {selectedSection === "VerifiedDeliveryPartner" && (
+                          </td>
+                        ))}
+                      {selectedSection === "VerifiedDeliveryPartner" &&
+                        Object.values(row).map((cell, i) => (
+                          <td
+                            key={i}
+                            className="px-1 py-1 border border-gray-300 text-center "
+                          >
                             <Link
                               to={`/current-verified-partner/${row.PartnerId}`}
+                              className="hover:text-blue-500 hover:underline hover:underline-cyan-500"
                             >
                               {cell}
                             </Link>
-                          )}
-                        </td>
-                      ))}
+                          </td>
+                        ))}
+                      {selectedSection === "ApiKey" &&
+                        Object.entries(row).map(([key, value], i) => (
+                          <td
+                            key={i}
+                            className="px-1 py-1 border border-gray-300 text-center "
+                          >
+                            <Link
+                              to={`#`}
+                              onClick={() => setApiDetails(row)}
+                              className="hover:text-blue-500 hover:underline hover:underline-cyan-500"
+                            >
+                              {key === "key"
+                                ? truncateString(value, 20) // or your custom function
+                                : value}
+                            </Link>
+                          </td>
+                        ))}
+                      {apiDetails !== null && selectedSection === "ApiKey" && (
+                        <PopUp onClose={() => setApiDetails(null)}>
+                          <ApiKeyCard apiKey={apiDetails} />
+                        </PopUp>
+                      )}
                     </tr>
                   ))}
                 </tbody>
@@ -408,23 +623,6 @@ const Home2 = () => {
             <div className="bg-white p-6 rounded-lg shadow-lg w-1/3">
               <h2 className="text-xl font-bold mb-4">Generate Offer</h2>
               <form ref={offerFormRef} onSubmit={handleOfferFormSubmit}>
-                {/* {Object.keys(offerForm).map((key) => (
-                  <div key={key} className="mb-4">
-                    <label className="block font-medium mb-2" htmlFor={key}>
-                      {key
-                        .replace(/([A-Z])/g, " $1")
-                        .replace(/^./, (str) => str.toUpperCase())}
-                    </label>
-                    <input
-                      type="text"
-                      id={key}
-                      name={key}
-                      value={offerForm[key]}
-                      onChange={handleFormChange}
-                      className="p-2 border border-gray-300 rounded-lg w-full"
-                    />
-                  </div>
-                ))} */}
                 {offerFormInputs.map((field, index) => {
                   return (
                     <div key={index} className="mb-4">

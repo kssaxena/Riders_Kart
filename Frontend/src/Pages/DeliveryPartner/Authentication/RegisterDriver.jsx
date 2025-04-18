@@ -143,8 +143,8 @@ function RegisterDriver() {
   };
 
   return (
-    <div className="max-w-[80vw] mx-auto my-10  rounded-lg shadow-2xl shadow-white-300 p-8 bg-color-standard">
-      <h1 className="text-3xl font-bold text-gray-800 mb-6 heading-text-gray">
+    <div className="max-w-[80vw] mx-auto my-10  rounded-lg shadow-2xl shadow-white-300 p-8 bg-[#949597]">
+      <h1 className="text-3xl font-bold mb-6 heading-text-gray">
         Personal Details <br />
         <span className="text-red-600 font-thin text-sm">
           **All fields are Required

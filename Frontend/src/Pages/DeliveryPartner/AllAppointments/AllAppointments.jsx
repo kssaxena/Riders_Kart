@@ -1,11 +1,10 @@
 import React, { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
 import io from "socket.io-client";
-import { DomainUrl } from "../../../utility/fetchFromAPI";
 import { alertSuccess } from "../../../utility/Alert";
 import { useSelector } from "react-redux";
 
-const socket = io(DomainUrl);
+const socket = io(process.env.DomainUrl);
 export default function AllAppointments() {
   const [allOrders, setAllOrders] = useState();
   // const [notifications, setNotifications] = useState([]);

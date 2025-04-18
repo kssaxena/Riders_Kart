@@ -25,18 +25,14 @@ const orderSchema = new Schema(
         trim: true,
       },
       pickup: {
-        // lat: {
-        //   type: Number,
-        //   required: true,
-        // },
-        // long: {
-        //   type: Number,
-        //   required: true,
-        // },
         type: { type: String, enum: ["Point"], required: true },
         coordinates: { type: [Number], required: true }, // [longitude, latitude]
       },
-      houseAddress: {
+      address: {
+        type: String,
+        required: true,
+      },
+      houseNo: {
         type: String,
       },
     },
@@ -70,7 +66,11 @@ const orderSchema = new Schema(
         type: { type: String, enum: ["Point"], required: true },
         coordinates: { type: [Number], required: true }, // [longitude, latitude]
       },
-      houseAddress: {
+      address: {
+        type: String,
+        required: true,
+      },
+      houseNo: {
         type: String,
       },
     },

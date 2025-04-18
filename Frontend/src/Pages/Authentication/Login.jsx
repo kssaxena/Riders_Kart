@@ -1,8 +1,8 @@
 import { Link, useNavigate } from "react-router-dom";
 import { useRef, useState } from "react";
 import ButtonWrapper from "../../Components/Buttons";
-import { ChevronDown, ChevronRight, Eye, EyeOff } from "lucide-react";
-import { DomainUrl, FetchData } from "../../utility/fetchFromAPI";
+import { Bike, ChevronRight, Eye, EyeOff, User } from "lucide-react";
+import { FetchData } from "../../utility/fetchFromAPI";
 import { useDispatch } from "react-redux";
 import { alertError, alertSuccess } from "../../utility/Alert";
 import { parseErrorMessage } from "../../utility/ErrorMessageParser";
@@ -12,8 +12,9 @@ import io from "socket.io-client";
 import LogInImg from "../../assets/Home/LogIn1.jpeg";
 import LoginDriverImg from "../../assets/Home/LoginDriverImg.jpg";
 import Input from "../../Components/Input";
+import { Check } from "lucide-react";
 
-const socket = io(DomainUrl);
+const socket = io(process.env.DomainUrl);
 
 const LogIn = () => {
   // Utility variables
@@ -69,7 +70,7 @@ const LogIn = () => {
           })
         );
         localStorage.setItem("user", "personal");
-        console.log("New custom obj added successfully");
+        socket.emit("joinUsersRoom", response.data.data.user._id);
       } else {
         navigate("/drivers-home");
         Dispatch(
@@ -79,18 +80,20 @@ const LogIn = () => {
           })
         );
         localStorage.setItem("user", "driver");
+        socket.emit("joinDriversRoom", response.data.data.user._id);
+
         console.log("New custom obj added successfully");
       }
 
       alertSuccess(response.data.message);
     } catch (error) {
       console.log(error);
-      // alertError(parseErrorMessage(error.response.data));
+      alertError(parseErrorMessage(error.response.data));
     }
   };
 
   return (
-    <div className=" shadow-lg shadow-[#949597] laptop:flex justify-center items-center w-full h-full py-20 gap-20">
+    <div className=" shadow-lg shadow-[#949597] laptop:flex justify-center items-center w-full h-full laptop:py-10 gap-20">
       <section className="LOGIN-IMG w-[40%] hidden lg-block ">
         {selectedForm === "Personal" ? (
           <img src={LogInImg} alt="" className="laptop:h-[60vh] phone:w-full" />
@@ -103,33 +106,64 @@ const LogIn = () => {
         )}
       </section>
 
-      <section className="Form_side bg-[#949597] border border-neutral-700 m-5 px-24 rounded-lg shadow-lg shadow-[#949597] ">
+      <section className="Form_side bg-[#949597] m-5 laptop:px-24 rounded-lg shadow-lg shadow-[#949597] laptop:py-10 phone:py-5 ">
         <h1 className="text-center mt-2 mb-5 text-xl text-black font-bold font-serif heading-text-gray">
           Login
         </h1>
 
-        <div className="Radio-btn flex justify-evenly  ">
-          <div className="flex items-center justify-center gap-2 mx-5  ">
+        <div className="flex justify-evenly flex-col laptop:flex-row gap-5">
+          {/* Personal Option */}
+          <div
+            className={`flex items-center justify-center gap-2 mx-5 px-6 py-3 rounded-lg cursor-pointer 
+        ${
+          selectedForm === "Personal"
+            ? "bg-[#DF3F33] text-white border-[#DF3F33]"
+            : "border-[#D5D5D7] text-black"
+        } border-2`}
+            onClick={() => setSelectedForm("Personal")}
+          >
             <input
-              // className="text-white"
               type="radio"
               name="Form"
               id="Personal"
               value="Personal"
+              checked={selectedForm === "Personal"}
               onChange={handleRadioChange}
-              defaultChecked
+              className="hidden"
             />
-            <Label htmlFor="Personal">Personal</Label>
+            {selectedForm === "Personal" && <Check size={20} />}
+            <label htmlFor="Personal" className="cursor-pointer">
+              <h1 className="flex justify-center items-center gap-2">
+                <User /> Personal
+              </h1>
+            </label>
           </div>
-          <div className="flex justify-center items-center gap-2 mx-5 ">
+
+          {/* Delivery Partner Option */}
+          <div
+            className={`flex items-center justify-center gap-2 mx-5 px-6 py-3 rounded-lg cursor-pointer 
+        ${
+          selectedForm === "DeliveryPartner"
+            ? "bg-[#DF3F33] text-white border-[#DF3F33]"
+            : "border-[#D5D5D7] text-black"
+        } border-2`}
+            onClick={() => setSelectedForm("DeliveryPartner")}
+          >
             <input
               type="radio"
               name="Form"
               id="DeliveryPartner"
               value="DeliveryPartner"
+              checked={selectedForm === "DeliveryPartner"}
               onChange={handleRadioChange}
+              className="hidden"
             />
-            <Label htmlFor="DeliveryPartner">Delivery Partner</Label>
+            {selectedForm === "DeliveryPartner" && <Check size={20} />}
+            <label htmlFor="DeliveryPartner" className="cursor-pointer">
+              <h1 className="flex justify-center items-center gap-2">
+                <Bike /> Delivery Partner
+              </h1>
+            </label>
           </div>
         </div>
 
@@ -254,7 +288,7 @@ const LogIn = () => {
           </form>
         )}
 
-        <div className="Sign_UP_Options my-5 ">
+        <div className="Sign_UP_Options phone:mx-4 my-5 ">
           <h3 className="text-center text-black bg-white text-opacity-80 shadow rounded-xl p-2">
             Don't have an account?
             <Link
@@ -265,7 +299,7 @@ const LogIn = () => {
             </Link>
           </h3>
         </div>
-        <div className="Sign_UP_Options my-5">
+        <div className="Sign_UP_Options phone:mx-4 my-5">
           <h3 className="flex bg-white justify-center items-center text-center text-black text-opacity-80 shadow rounded-xl p-2">
             To become delivery partner{" "}
             <span>

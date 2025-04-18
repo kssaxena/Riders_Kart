@@ -6,13 +6,16 @@ import Badge from "../../Components/Badge";
 import ProgressBar from "../../Components/progressBar";
 import Table from "../../Components/Table";
 import ButtonWrapper from "../../Components/Buttons";
-import { useParams } from "react-router-dom";
+import { useNavigate, useParams } from "react-router-dom";
 import { FetchData } from "../../Utils/fetchFromAPI";
 import Lottie from "lottie-react";
 import Loading from "../../assets/Loading/Loading.json";
+import { alertSuccess } from "../../Utils/Alert";
 
 const VerifiedPartner = () => {
   const [activeTab, setActiveTab] = useState("orders");
+  
+  const navigate = useNavigate()
 
   const { partnerId } = useParams();
   const [CurrentPartner, setPartner] = useState(null);
@@ -45,6 +48,7 @@ const VerifiedPartner = () => {
     }
   };
   const handleDeletePartner = async () => {
+    // alertSuccess("Partner successfully deleted")
     try {
       console.log(partnerId);
 
@@ -53,29 +57,13 @@ const VerifiedPartner = () => {
         "delete",
         {}
       );
-      console.log(response);
+      alertSuccess("Partner successfully deleted")
+      // console.log(response);
+      navigate("/home/All_Orders");
     } catch (error) {
       console.error("Error", error);
     }
   };
-
-  console.log(CurrentPartner);
-
-  // const partnerData = {
-  //   name: "John Doe",
-  //   address: "123 Main St, Anytown, AN 12345",
-  //   license: "DL1234567890",
-  //   vehicle: {
-  //     type: "Car",
-  //     model: "Toyota Corolla",
-  //     year: "2019",
-  //     plateNumber: "ABC 123",
-  //   },
-  //   rating: 4.8,
-  //   verificationStatus: "Verified",
-  //   totalDeliveries: 500,
-  //   totalEarnings: 5000,
-  // };
 
   const orders = [
     { id: "ORD001", date: "2023-05-01", status: "Delivered", amount: 25.5 },

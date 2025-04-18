@@ -4,8 +4,8 @@ import { Link } from "react-router-dom";
 
 const Footer = () => {
   return (
-    <div className="bg-black text-white  select-none">
-      <section className="Upper-part pt-10 flex justify-around phone:gap-10 flex-wrap">
+    <div className="bg-black text-white  select-none z-50">
+      <section className="Upper-part pt-10 flex justify-around phone:gap-10 flex-wrap z-50">
         <div className="Logo-and-slogan ">
           <h1 className="text-[2rem] font-serif">Rider's Kart</h1>
           <h3 className="text-lg text-gray-300 font-Exo">Send anything,</h3>
@@ -21,9 +21,6 @@ const Footer = () => {
             <li className="small-footer-text">
               <Link>Careers</Link>
             </li>
-            <li className="small-footer-text">
-              <Link>Blog</Link>
-            </li>
           </ul>
         </div>
 
@@ -33,9 +30,7 @@ const Footer = () => {
             <li className="small-footer-text">
               <Link> Services</Link>
             </li>
-            <li className="small-footer-text">
-              <Link> Tools</Link>
-            </li>
+
             <li className="small-footer-text">
               <Link> API Integrations</Link>
             </li>

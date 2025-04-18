@@ -1,0 +1,7 @@
+Options -MultiViews
+RewriteEngine On
+
+# Redirect all requests to index.html except existing files or directories
+RewriteCond %{REQUEST_FILENAME} !-f
+RewriteCond %{REQUEST_FILENAME} !-d
+RewriteRule ^ index.html [QSA,L]

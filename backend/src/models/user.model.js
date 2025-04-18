@@ -45,6 +45,8 @@ const userSchema = new Schema(
         ref: "Offer", // Reference to Offer model
       },
     ],
+    
+    socketId: { type: String, default: null },
   },
   {
     timestamps: true,

@@ -21,10 +21,6 @@ const PopUp = ({ children, onClose, onClick }) => {
           <button onClick={onClose}>
             <X size={30} />
           </button>
-
-          <a href={"/CV.pdf"} download>
-            <ArrowBigDownDash />
-          </a>
         </div>
         {children}
       </div>

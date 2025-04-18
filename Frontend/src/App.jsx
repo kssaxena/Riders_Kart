@@ -1,4 +1,4 @@
-import React, { useEffect } from "react";
+import React, { useEffect, useRef, useState } from "react";
 import Header from "./Components/Header";
 import { Route, Routes } from "react-router-dom";
 import Home from "./Pages/Home/Home.index";
@@ -21,11 +21,13 @@ import { useDispatch } from "react-redux";
 import { addUser, clearUser } from "./utility/Slice/UserInfoSlice";
 import { addAllAppointment } from "./utility/Slice/AllAppointmentsSlice";
 import { parseErrorMessage } from "./utility/ErrorMessageParser";
-import { alertError } from "./utility/Alert";
+import { alertError, alertSuccess } from "./utility/Alert";
+import socket from "./socket";
+import ApiRequests from "./Pages/API_Requests/ApiRequests";
 
 const App = () => {
   const Dispatch = useDispatch();
-
+  const [notifications, setNotifications] = useState([]);
   // Re-logging in after refreshing the page
   useEffect(() => {
     async function reLogin() {
@@ -64,8 +66,8 @@ const App = () => {
                 personal: true,
               })
             );
+            socket.emit("joinUsersRoom", User.data.data.user._id);
           }
-          return User;
         } catch (error) {
           console.log(error);
           alertError(parseErrorMessage(error));
@@ -99,8 +101,8 @@ const App = () => {
               })
             );
             Dispatch(addAllAppointment(User.data.data.user.allAppointments));
+            socket.emit("joinDriversRoom", User.data.data.user._id);
           }
-          return User;
         } catch (error) {
           console.log(error);
           // alertError(parseErrorMessage(error));
@@ -132,6 +134,7 @@ const App = () => {
           element={<DeliveryPartnerProfile />}
         />
         <Route path="/all-appointments" element={<AllAppointments />} />
+        <Route path="/api-requests/:userId" element={<ApiRequests />} />
 
         {/* {--------------------------------------payment page--------------------------------------} */}
         <Route path="/payment-page" element={<PaymentPage />} />

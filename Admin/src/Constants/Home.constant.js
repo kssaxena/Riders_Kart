@@ -22,4 +22,10 @@ export const initialSections = {
       "Details about verified delivery partners are displayed in the table below.",
     tableData: [],
   },
+  ApiKey: {
+    title: "API Keys",
+    description:
+      "Details about API keys are displayed in the table below.",
+    tableData: [],
+  },
 };
