@@ -3,12 +3,8 @@ import { alertError } from "./Alert";
 import { parseErrorMessage } from "./ErrorMessageParser";
 
 export const FetchData = async (url, method, data = null) => {
-  const Base_URL = "http://localhost:3000/api/v1";
+  const Base_URL = `${process.env.DomainUrl}/api/v1`;
   const AccessToken = localStorage.getItem("AccessToken");
-
-  if (!AccessToken) {
-    throw new Error("No Access Token available");
-  }
 
   const options = {
     headers: {
@@ -24,6 +20,8 @@ export const FetchData = async (url, method, data = null) => {
       response = await axios.get(`${Base_URL}/${url}`, options);
     } else if (method === "post") {
       response = await axios.post(`${Base_URL}/${url}`, data, options);
+    } else if (method === "patch") {
+      response = await axios.patch(`${Base_URL}/${url}`, data, options);
     } else if (method === "delete") {
       response = await axios.delete(`${Base_URL}/${url}`, options);
     } else {

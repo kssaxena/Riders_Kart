@@ -1,8 +1,14 @@
 import { Facebook, Instagram, Linkedin, Twitter, Youtube } from "lucide-react";
 import React, { useState } from "react";
+import { useSelector } from "react-redux";
 import { Link } from "react-router-dom";
 
 const Footer = () => {
+  const user = useSelector((store) => store.UserInfo.user);
+  // const Dispatch = useDispatch();
+  // console.log(user);
+
+  // const { userId } = useParams();
   const cities = [
     "Delhi NCR",
     "Chandigarh",
@@ -30,6 +36,13 @@ const Footer = () => {
 
   const togglePopup = () => {
     setIsOpen(!isOpen);
+  };
+
+  const handleNavigate = () => {
+    if (!openNavigation) return;
+
+    enablePageScroll();
+    setOpenNavigation(false);
   };
 
   return (
@@ -82,13 +95,12 @@ const Footer = () => {
         <h1 className="text-xl">Company</h1>
         <ul className="flex gap-5 ">
           <li className="small-footer-text hover:underline">
-            <Link>About Us</Link>
+            <Link to={"#FAQ"} onClick={handleNavigate}>
+              About Us
+            </Link>
           </li>
           <li className="small-footer-text hover:underline">
             <Link>Careers</Link>
-          </li>
-          <li className="small-footer-text hover:underline">
-            <Link>Blog</Link>
           </li>
         </ul>
       </div>
@@ -96,13 +108,17 @@ const Footer = () => {
         <h1 className="text-xl">Quick Links </h1>
         <ul className="flex flex-wrap w-full gap-5 ">
           <li className="small-footer-text">
-            <Link> Services</Link>
+            <Link to={"#services"} onClick={handleNavigate}>
+              {" "}
+              Services
+            </Link>
           </li>
+
           <li className="small-footer-text">
-            <Link> Tools</Link>
-          </li>
-          <li className="small-footer-text">
-            <Link> API Integrations</Link>
+            <Link to={`/api-requests/${user?.[0]?._id}`}>
+              {" "}
+              API Integrations
+            </Link>
           </li>
           <li className="small-footer-text">
             <Link> Courier</Link>
@@ -111,10 +127,16 @@ const Footer = () => {
             <Link> Packers & Movers</Link>
           </li>
           <li className="small-footer-text">
-            <Link> Two Wheelers</Link>
+            <Link to={"#Booking_Input"} onClick={handleNavigate}>
+              {" "}
+              Two Wheelers
+            </Link>
           </li>
           <li className="small-footer-text">
-            <Link> Trucks </Link>
+            <Link to={"#Booking_Input"} onClick={handleNavigate}>
+              {" "}
+              Trucks{" "}
+            </Link>
           </li>
         </ul>
       </div>
@@ -141,71 +163,6 @@ const Footer = () => {
           </li>
         </ul>
       </div>
-      {/* <section className="We_are_here ">
-        <h1 className="m-5 mb-0 ">We are here</h1>
-        <ul className="grid laptop:grid-cols-5 phone:grid-cols-3 p-5">
-          <li className="small-footer-text ">
-            <Link>Delhi NCR</Link>
-          </li>
-          <li className="small-footer-text">
-            <Link>Chandigarh</Link>
-          </li>
-          <li className="small-footer-text">
-            <Link>Ahmedabad</Link>
-          </li>
-          <li className="small-footer-text">
-            <Link>Coimbatore</Link>
-          </li>
-          <li className="small-footer-text">
-            <Link>Hyderabad</Link>
-          </li>
-          <li className="small-footer-text">
-            <Link>Jaipur</Link>
-          </li>
-          <li className="small-footer-text">
-            <Link>Surat</Link>
-          </li>
-          <li className="small-footer-text">
-            <Link>Ludhiana</Link>
-          </li>
-          <li className="small-footer-text">
-            <Link>Bangalore</Link>
-          </li>
-          <li className="small-footer-text">
-            <Link>Chennai</Link>
-          </li>
-          <li className="small-footer-text">
-            <Link>Nagpur</Link>
-          </li>
-          <li className="small-footer-text">
-            <Link>Kochi</Link>
-          </li>
-          <li className="small-footer-text">
-            <Link>Mumbai</Link>
-          </li>
-          <li className="small-footer-text">
-            <Link>Kolkata</Link>
-          </li>
-          <li className="small-footer-text">
-            <Link>Lucknow</Link>
-          </li>
-          <li className="small-footer-text">
-            <Link>Nashik</Link>
-          </li>
-          <li className="small-footer-text">
-            <Link>Vadodara</Link>
-          </li>
-          <li className="small-footer-text">
-            <Link>Indore</Link>
-          </li>
-          <li className="small-footer-text">
-            <Link>Pune</Link>
-          </li>
-          <li className="small-footer-text">
-            <Link>Kanpur</Link>
-          </li>
-        </ul>
-      </section> */}
       <section className="Social flex gap-5 p-5 w-full justify-center items-center">
         <Link
           className="Instagram hover:scale-110 transition "

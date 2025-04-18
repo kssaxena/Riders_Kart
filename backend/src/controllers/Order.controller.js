@@ -8,23 +8,29 @@ import { asyncHandler } from "../utils/asyncHandler.js";
 import { io } from "../app.js";
 import { NotificationStructure } from "../utils/NotificationClass.js";
 
-const FindNearbyDrivers = async (Coordinates, Radius = 5000) => {
-  // Coordinates = [longitude, latitude]
+export const FindNearbyDrivers = async (Coordinates, Radius = 5000) => {
+  // Coordinates should be [longitude, latitude]
+  console.log("Searching drivers near:", Coordinates);
+  console.log("Radius:", Radius);
 
-  const drivers = await DeliveryPartner.find({
-    location: {
-      $near: {
-        $geometry: {
-          type: "Point",
-          coordinates: Coordinates, // [longitude, latitude]
+  try {
+    const drivers = await DeliveryPartner.find({
+      currentLocation: {
+        $near: {
+          $geometry: {
+            type: "Point",
+            coordinates: Coordinates, // [longitude, latitude]
+          },
+          $maxDistance: Radius, // 5 km in meters
         },
-        $maxDistance: Radius, // 5 km in meters
       },
-    },
-    isAvailable: true,
-  });
-
-  return drivers;
+      isAvailable: true,
+    });
+    return drivers;
+  } catch (error) {
+    console.error("Error finding drivers:", error);
+    return [];
+  }
 };
 
 const PushNotification = async (allDrivers, createdOrder) => {
@@ -35,8 +41,8 @@ const PushNotification = async (allDrivers, createdOrder) => {
 
     await driver.populate("allAppointments");
 
-    io.to(`${driver._id}`).emit(
-      "newOrder",
+    io.to(`${driver.socketId}`).emit(
+      "order:new",
       new NotificationStructure(
         "New Order",
         `${createdOrder.sender?.name} has initiated a new order. Want to have a look?`,
@@ -121,10 +127,9 @@ const CreateOrder = asyncHandler(async (req, res) => {
           sender.pickupCoordinates.long,
           sender.pickupCoordinates.lat,
         ],
-        // lat: sender.pickupCoordinates.lat,
-        // long: sender.pickupCoordinates.long,
       },
-      houseAddress: sender.senderHouseNumber || null,
+      houseNo: sender.senderHouseNumber || null,
+      address: sender.senderAddress,
     },
     receiver: {
       name: receiver.receiverName,
@@ -139,7 +144,8 @@ const CreateOrder = asyncHandler(async (req, res) => {
           receiver.dropCoordinates.lat,
         ],
       },
-      houseAddress: receiver.receiverHouseNumber || null,
+      houseNo: receiver.receiverHouseNumber || null,
+      address: receiver.receiverAddress,
     },
     vehicle,
     productDetails: {
@@ -288,7 +294,7 @@ const GetAllOrders = asyncHandler(async (req, res) => {
   if (orders.length === 0) {
     res
       .status(201)
-      .json(new ApiResponse(201, "No users found", "Got the data"));
+      .json(new ApiResponse(201, "No Orders found", "Got the data"));
   }
 
   res.status(201).json(new ApiResponse(201, orders, "All Orders"));

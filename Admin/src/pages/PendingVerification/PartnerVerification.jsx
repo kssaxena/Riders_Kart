@@ -1,15 +1,17 @@
 import React, { useEffect, useState } from "react";
 import Card from "../../Components/Card";
-import { useParams } from "react-router-dom";
+import { useNavigate, useParams } from "react-router-dom";
 import { FetchData } from "../../Utils/fetchFromAPI";
 import Lottie from "lottie-react";
 import Loading from "../../assets/Loading/Loading.json";
 import { Check, IdCard, X } from "lucide-react";
 import ButtonWrapper from "../../Components/Buttons";
+import { alertSuccess } from "../../Utils/Alert";
 
 const PartnerVerification = () => {
   const { verificationId } = useParams();
   const [CurrentVerification, setCurrentVerification] = useState(null);
+  const navigate = useNavigate();
 
   useEffect(() => {
     async function fetchVerificationData(verificationId) {
@@ -31,9 +33,12 @@ const PartnerVerification = () => {
       console.log(verificationId);
       const response = await FetchData(
         `admin/driver/accept-request/${verificationId}`,
-        "post",{}
+        "post",
+        {}
       );
       console.log(response);
+      alertSuccess("Partner Verified Successfully");
+      navigate("/home/All_Orders");
     } catch (error) {
       console.error("Error:", error);
     }
@@ -43,10 +48,12 @@ const PartnerVerification = () => {
     try {
       console.log(verificationId);
       const response = await FetchData(
-        `url${verificationId}`,
+        `admin/driver/delete-partner/${verificationId}`,
         "delete"
       );
       console.log(response);
+      alertSuccess("Partner Rejected Successfully");
+      navigate("/home/All_Orders");
     } catch (error) {
       console.error("Error:", error);
     }

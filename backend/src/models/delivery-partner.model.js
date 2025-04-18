@@ -23,6 +23,12 @@ const deliveryPartnerSchema = new Schema(
       trim: true,
     },
 
+    email: {
+      type: String,
+      unique: true,
+      trim: true,
+    },
+
     password: {
       type: String,
       required: true,
@@ -133,13 +139,7 @@ const deliveryPartnerSchema = new Schema(
       },
     ],
 
-    // subscription: {
-    //   endpoint: { type: String, required: true },
-    //   keys: {
-    //     p256dh: { type: String, required: true },
-    //     auth: { type: String, required: true },
-    //   },
-    // },
+    socketId: { type: String, default: null },
 
     allPayments: [
       {
@@ -174,7 +174,7 @@ const deliveryPartnerSchema = new Schema(
     },
 
     currentLocation: {
-      type: { type: String, enum: ["Point"] },
+      type: { type: String, enum: ["Point"], default: "Point" },
       coordinates: { type: [Number] }, // [longitude, latitude]
     },
 
@@ -225,7 +225,7 @@ deliveryPartnerSchema.methods.generateRefreshToken = function () {
   );
 };
 
-deliveryPartnerSchema.index({ location: "2dsphere" }); // Geospatial index
+deliveryPartnerSchema.index({ currentLocation: "2dsphere" }); // Geospatial index
 
 export const DeliveryPartner = mongoose.model(
   "DeliveryPartner",

@@ -6,6 +6,8 @@ import { Logo } from "../Constants/homeConstants";
 import { useDispatch, useSelector } from "react-redux";
 import { clearUser } from "../utility/Slice/UserInfoSlice";
 import { alertInfo } from "../utility/Alert";
+import { motion } from "framer-motion";
+import socket from "../socket";
 
 const Header = () => {
   // constants
@@ -19,8 +21,24 @@ const Header = () => {
   const location = useLocation();
 
   //  UI for Hamburger
-  const Hamburger = ({ onClose }) => {
+  const menuVariants = {
+    hidden: { x: "-100%", opacity: 0 },
+    visible: {
+      x: "0%",
+      opacity: 1,
+      transition: { duration: 0.4, ease: "easeOut" },
+    },
+    exit: {
+      x: "-100%",
+      opacity: 0,
+      transition: { duration: 0.3, ease: "easeIn" },
+    },
+  };
+
+  const Hamburger = ({ onClose, user }) => {
     const modelRef = useRef();
+    const navigate = useNavigate();
+    const dispatch = useDispatch();
 
     const closeModel = (e) => {
       if (modelRef.current === e.target) {
@@ -32,64 +50,91 @@ const Header = () => {
       <div
         ref={modelRef}
         onClick={closeModel}
-        className="fixed inset-0 flex  w-[50vw] h-60 z-5 bg-[#D5D5D7] backdrop-blur-3xl rounded-r-xl overflow-hidden font-Fredoka  "
+        className="fixed inset-0 flex w-full h-screen z-50 backdrop-blur-3xl"
       >
-        <div className="flex flex-col  w-full  ">
-          <div className="h-248 flex justify-between p-6 gap-2">
-            <div className="">
-              <h1 className="text-xl font-serif font-semibold">Menu</h1>
-            </div>
-            <div>
-              <button className="" onClick={onClose}>
-                <X size={30} />
-              </button>
-            </div>
+        <motion.div
+          variants={menuVariants}
+          initial="hidden"
+          animate="visible"
+          exit="exit"
+          className="flex flex-col w-3/4 bg-[#D5D5D7] rounded-r-xl shadow-lg"
+        >
+          <div className="h-16 flex justify-between items-center p-6">
+            <h1 className="text-xl font-serif font-semibold">Menu</h1>
+            <button onClick={onClose}>
+              <X size={30} />
+            </button>
           </div>
 
           <section className="menu-section flex flex-col font-Fredoka">
-            <Link to={"/"} onClick={onClose} className=" font-Exo my-1 mx-2  ">
-              For Enterprise/ Personal
+            <Link className="ml-2" to="/" onClick={onClose}>
+              Home
             </Link>
+            <hr className="border-gray-600 mr-10 my-2" />
+
             <Link
-              to="/delivery-partners"
+              to="/booking"
               onClick={onClose}
-              className=" font-Exo my-1 mx-2  "
+              className="font-Exo my-1 mx-2"
             >
-              For Delivery Partner
+              Book your Parcel
             </Link>
+            <hr className="border-gray-600 mr-10 my-2" />
+
+            <Link
+              to="/register-driver"
+              onClick={onClose}
+              className="font-Exo my-1 mx-2"
+            >
+              Register as Driver
+            </Link>
+            <hr className="border-gray-600 mr-10 my-2" />
+
             {user ? (
-              <Link
-                to={"/login"}
-                onClick={() => {
-                  Dispatch(clearUser());
-                  alertInfo("you are logged Out! Please log in");
-                  onClose();
-                  navigate("/login");
-                  localStorage.clear();
-                }}
-                className=" font-Exo my-1 mx-2  "
-              >
-                Log out
-              </Link>
+              <>
+                <Link
+                  to="/login"
+                  onClick={() => {
+                    dispatch(clearUser());
+                    alert("You are logged out! Please log in");
+                    socket.disconnect();
+                    onClose();
+                    navigate("/login");
+                    localStorage.clear();
+                  }}
+                  className="font-Exo my-1 mx-2"
+                >
+                  Log out
+                </Link>
+                <hr className="border-gray-600 mr-10 my-2" />
+              </>
             ) : (
-              <Link
-                to={"/login"}
-                onClick={onClose}
-                className=" font-Exo my-1 mx-2  "
-              >
-                Login
-              </Link>
+              <>
+                <Link
+                  to="/login"
+                  onClick={onClose}
+                  className="font-Exo my-1 mx-2"
+                >
+                  Login
+                </Link>
+                <hr className="border-gray-600 mr-10 my-2" />
+              </>
             )}
-            {user ? (
-              <Link to={"/all-orders"} className=" font-Exo my-1 mx-2  ">
-                all Orders
-              </Link>
-            ) : null}
-            <Link to={"#"} onClick={onClose} className=" font-Exo my-1 mx-2  ">
+
+            {user && (
+              <>
+                <Link to="/all-orders" className="font-Exo my-1 mx-2">
+                  All Orders
+                </Link>
+                <hr className="border-gray-600 mr-10 my-2" />
+              </>
+            )}
+
+            <Link to="#" onClick={onClose} className="font-Exo my-1 mx-2">
               Support
             </Link>
           </section>
-        </div>
+        </motion.div>
       </div>
     );
   };
@@ -125,9 +170,9 @@ const Header = () => {
           src={Logo}
           alt="Logo"
           title={`Rider's Kart`}
-          className="w-16 phone:hidden tablet:block"
+          className="w-16 tablet:block"
         />
-        <h1 className="phone:text-lg tablet:text-2xl font-Exo heading-text-gray">
+        <h1 className="phone:text-lg tablet:text-2xl laptop:block font-Exo heading-text-gray phone:hidden">
           Rider's Kart
         </h1>
       </div>
@@ -158,15 +203,20 @@ const Header = () => {
       )}
 
       <div className="support hidden laptop:flex laptop:justify-center items-center gap-5">
-        <Link className="font-sans" to={`#`}>
-          Support
-        </Link>
+        <ButtonWrapper
+          onClick={() => {
+            navigate("/");
+          }}
+        >
+          Home
+        </ButtonWrapper>
 
         {user && user.length > 0 ? (
           <div>
             <ButtonWrapper
               onClick={() => {
                 Dispatch(clearUser());
+                socket.disconnect();
                 navigate("/login");
                 alertInfo("you are logged Out! Please log in");
                 localStorage.clear();
@@ -223,6 +273,9 @@ const Header = () => {
             </div>
           )
         ) : null}
+        <Link className="font-sans" to={`#`}>
+          Support
+        </Link>
       </div>
     </div>
   );

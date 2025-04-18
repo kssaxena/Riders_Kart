@@ -8,6 +8,7 @@ import { asyncHandler } from "../utils/asyncHandler.js";
 import jwt from "jsonwebtoken";
 import { NotificationStructure } from "../utils/NotificationClass.js";
 import { io } from "../app.js";
+import { FindNearbyDrivers } from "./Order.controller.js";
 
 const generateAccessAndRefreshTokens = async (userId) => {
   try {
@@ -257,7 +258,7 @@ const RegenerateRefreshToken = asyncHandler(async (req, res) => {
   if (!token) throw new ApiError(401, "Unauthorized request");
 
   const DecodedToken = jwt.verify(token, process.env.REFRESH_TOKEN_SECRET);
-  console.log(DecodedToken);
+  // console.log(DecodedToken);
   const user = await DeliveryPartner.findById(DecodedToken._id).select(
     "-password -refreshToken"
   );
@@ -427,14 +428,27 @@ const ToggleSuspendPartner = asyncHandler(async (req, res) => {
 
 const ToggleActiveDriver = asyncHandler(async (req, res) => {
   const { driverId } = req.params;
-  if (!driverId) throw new ApiError(400, "Driver ID is required");
+  const { coordinates } = req.body;
+  if (!driverId || !coordinates)
+    throw new ApiError(400, "Driver ID and coordinates are required!!!");
+
+  if (!Array.isArray(coordinates))
+    throw new ApiError(400, "Address must be an array of coordinates");
 
   const driver = await DeliveryPartner.findById(driverId);
   if (!driver) throw new ApiError(404, "Driver not found");
 
   if (driver.verificationStatus === DriverVerificationStatus[2]) {
+    console.log("Driver Active status: ",driver.isActive); 
     driver.isActive = !driver.isActive;
     await driver.save();
+
+    driver.currentLocation = {
+      type: "Point",
+      coordinates,
+    };
+    await driver.save();
+
     res.status(200).json(new ApiResponse(200, driver, "Driver status updated"));
   } else if (
     driver.verificationStatus === DriverVerificationStatus[0] ||
@@ -461,44 +475,44 @@ const ToggleActiveDriver = asyncHandler(async (req, res) => {
       );
 });
 
-const UpdateDriverAddress = asyncHandler(async (req, res) => {
-  const { driverId } = req.params;
-  const { address } = req.body;
+// const UpdateDriverAddress = asyncHandler(async (req, res) => {
+//   const { driverId } = req.params;
+//   const { address } = req.body;
 
-  if (!driverId || !address)
-    throw new ApiError(400, "Driver ID and Address are required");
+//   if (!driverId || !address)
+//     throw new ApiError(400, "Driver ID and Address are required");
 
-  if (!Array.isArray(address)) {
-    throw new ApiError(400, "Address must be an array of coordinates");
-  }
+//   if (!Array.isArray(address)) {
+//     throw new ApiError(400, "Address must be an array of coordinates");
+//   }
 
-  const driver = await DeliveryPartner.findByIdAndUpdate(
-    driverId,
-    {
-      currentLocation: {
-        type: "Point",
-        coordinates: address,
-      },
-    },
-    { new: true }
-  );
-  if (!driver) throw new ApiError(404, "Driver not found!");
+//   const driver = await DeliveryPartner.findByIdAndUpdate(
+//     driverId,
+//     {
+//       currentLocation: {
+//         type: "Point",
+//         coordinates: address,
+//       },
+//     },
+//     { new: true }
+//   );
+//   if (!driver) throw new ApiError(404, "Driver not found!");
 
-  if (driver.activeOrder) {
-    const order = await Order.findByIdAndUpdate(driver.activeOrder, {
-      tracking: {
-        current: {
-          type: "Point",
-          coordinates: address,
-        },
-      },
-    });
-    if (order)
-      throw new ApiError(404, "Your current order not found! Please check.");
-  }
+//   if (driver.activeOrder) {
+//     const order = await Order.findByIdAndUpdate(driver.activeOrder, {
+//       tracking: {
+//         current: {
+//           type: "Point",
+//           coordinates: address,
+//         },
+//       },
+//     });
+//     if (!order)
+//       throw new ApiError(404, "Your current order not found! Please check.");
+//   }
 
-  res.status(200).json(new ApiResponse(200, driver, "Driver address updated"));
-});
+//   res.status(200).json(new ApiResponse(200, driver, "Driver address updated"));
+// });
 
 export {
   RegisterDriver,
@@ -516,5 +530,5 @@ export {
   DeletePartner,
   ToggleActiveDriver,
   ToggleSuspendPartner,
-  UpdateDriverAddress,
+  // UpdateDriverAddress,
 };

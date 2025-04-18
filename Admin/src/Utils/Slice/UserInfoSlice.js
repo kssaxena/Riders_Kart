@@ -7,10 +7,10 @@ const UserInfo = createSlice({
   },
   reducers: {
     addUser: (state, action) => {
-      state.user.push(action.payload);
+      state.user = action.payload;
     },
     clearUser: (state) => {
-      state.user = [];
+      state.user = null;
     },
   },
 });

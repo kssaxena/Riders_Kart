@@ -6,13 +6,13 @@ import { Link, useNavigate, useParams } from "react-router-dom";
 import { useEffect, useState } from "react";
 import { alertError, alertSuccess } from "../../../utility/Alert";
 import { useDispatch, useSelector } from "react-redux";
-import { DomainUrl, FetchData } from "../../../utility/fetchFromAPI";
+import { FetchData } from "../../../utility/fetchFromAPI";
 import { addUser, clearUser } from "../../../utility/Slice/UserInfoSlice";
 import { parseErrorMessage } from "../../../utility/ErrorMessageParser";
 import io from "socket.io-client";
 import { addAllAppointment } from "../../../utility/Slice/AllAppointmentsSlice";
 
-const socket = io(DomainUrl);
+const socket = io(process.env.DomainUrl);
 export default function DeliveryPartnerHome() {
   const Navigate = useNavigate();
   const Dispatch = useDispatch();
@@ -24,7 +24,7 @@ export default function DeliveryPartnerHome() {
   const [isDropdownOpen, setIsDropdownOpen] = useState(false);
   const [selectedOption, setSelectedOption] = useState(null);
   const user = useSelector((store) => store.UserInfo.user);
-  console.log(user);
+  // console.log(user);
   const [CurrentPartner, setPartner] = useState(null);
 
   const options = [
@@ -67,11 +67,10 @@ export default function DeliveryPartnerHome() {
   ];
 
   // For socket connection
-
   useEffect(() => {
     if (socket && user) {
       // Join the room with the delivery partner's ID
-      console.log(user);
+      // console.log(user);
       socket.emit("DriversRoom", user[0]?._id);
 
       // Listen for new order notifications
@@ -103,30 +102,132 @@ export default function DeliveryPartnerHome() {
     setIsDropdownOpen(false);
   };
 
+  // UI component for switching the driver's active state
   const ToggleSwitch = () => {
-    const [isActive, setIsActive] = useState(true);
+    const [isActive, setIsActive] = useState(user[0]?.isActive || false);
+    const [coordinates, setLocationHistory] = useState({});
+    const [locationPermissionGranted, setLocationPermissionGranted] =
+      useState(false);
 
-    // Function to send the toggle state to the backend
-    const sendToggleState = async (state) => {
+    // Function to fetch live location
+    // const getLiveLocation = () => {
+    //   return new Promise((resolve, reject) => {
+    //     if (!navigator.geolocation) {
+    //       reject(new Error("Geolocation is not supported by your browser."));
+    //     } else {
+    //       navigator.geolocation.getCurrentPosition(
+    //         (position) => {
+    //           console.log(position);
+    //           const { latitude, longitude } = position.coords;
+    //           resolve({ latitude, longitude });
+    //         },
+    //         (error) => {
+    //           reject(new Error("Error fetching location: " + error));
+    //         },
+    //         {
+    //           enableHighAccuracy: true,
+    //           timeout: 10000,
+    //           maximumAge: 0,
+    //         }
+    //       );
+    //     }
+    //   });
+    // };
+
+    const getLiveLocation = () => {
+      return new Promise((resolve, reject) => {
+        if (!navigator.geolocation) {
+          reject(new Error("Geolocation is not supported by your browser."));
+        } else {
+          navigator.geolocation.getCurrentPosition(
+            (position) => {
+              console.log(position);
+              const { latitude, longitude } = position.coords;
+              resolve({ latitude, longitude });
+            },
+            (error) => {
+              let errorMessage = "";
+              switch (error.code) {
+                case error.PERMISSION_DENIED:
+                  errorMessage = "User denied the request for Geolocation.";
+                  break;
+                case error.POSITION_UNAVAILABLE:
+                  errorMessage = "Location information is unavailable.";
+                  break;
+                case error.TIMEOUT:
+                  errorMessage = "The request to get user location timed out.";
+                  break;
+                case error.UNKNOWN_ERROR:
+                default:
+                  errorMessage = "An unknown error occurred.";
+                  break;
+              }
+              reject(new Error(`Error fetching location: ${errorMessage}`));
+            },
+            {
+              enableHighAccuracy: true,
+              timeout: 10000,
+              maximumAge: 0,
+            }
+          );
+        }
+      });
+    };
+
+    // const sendToggleState = async (locations) => {
+    //   if (user?.length > 0) {
+    //     try {
+    //       const response = await FetchData(
+    //         `driver/toggle-active-driver/${user[0]?._id}`,
+    //         "post",
+    //         { coordinates: locations }
+    //       );
+    //       console.log(response);
+    //       console.log("Toggle state & locations sent successfully", {
+    //         locations,
+    //       });
+    //     } catch (error) {
+    //       console.error("Error sending toggle state:", error);
+    //     }
+    //   }
+    // };
+    // useEffect(() => {
+    //   sendToggleState();
+    // }, [user]);
+
+    const handleToggle = async () => {
       try {
-        const response = await FetchData(
-          `driver/toggle-active-driver/${user[0]?._id}`,
-          "post"
-        );
-        console.log(response);
-        console.log("Toggle state sent successfully", state);
+        await getLiveLocation()
+          .then(async (location) => {
+            console.log("User Location:", location);
+
+            setLocationHistory((prevHistory) => ({
+              ...prevHistory,
+              ...location,
+            })); // Append new location
+            setLocationPermissionGranted(true);
+            const response = await FetchData(
+              `driver/toggle-active-driver/${user[0]?._id}`,
+              "post",
+              { coordinates: [location.longitude, location.latitude] }
+            )
+              .then((response) => {
+                console.log("Location Set successfully:", response);
+                console.log("Toggle state & locations sent successfully", {
+                  location,
+                });
+                setIsActive(!isActive);
+              })
+              .catch((error) => console.error("error in fetching:", error));
+          })
+          .catch((error) => console.error(error.message));
       } catch (error) {
-        console.error("Error sending toggle state:", error);
+        console.error(error);
       }
     };
 
-    const handleToggle = async () => {
-      await sendToggleState();
-      setIsActive(!isActive);
-    };
-
     return (
-      <div className="flex items-center space-x-4">
+      <div className="flex flex-col items-center space-y-2">
         <div
           onClick={handleToggle}
           className={`w-16 h-8 flex items-center cursor-pointer rounded-full p-1 transition-all duration-300 ${
@@ -143,6 +244,15 @@ export default function DeliveryPartnerHome() {
         <span className="font-semibold text-lg">
           {isActive ? "Active" : "Inactive"}
         </span>
+
+        {isActive && Object.keys(coordinates).length > 0 && (
+          <div className="text-sm text-gray-700">
+            <p>
+              Last Location: {Object.keys(coordinates).pop()},{" "}
+              {Object.values(coordinates).pop()}
+            </p>
+          </div>
+        )}
       </div>
     );
   };

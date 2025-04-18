@@ -1,8 +1,7 @@
 import React, { useEffect } from "react";
-import { publicVapidKey } from "../../env";
 
 // Replace with your public VAPID key from the backend
-const publicVapidKey = publicVapidKey;
+// const publicVapidKey = publicVapidKey;
 
 function urlBase64ToUint8Array(base64String) {
   const padding = "=".repeat((4 - (base64String.length % 4)) % 4);
@@ -43,7 +42,7 @@ async function subscribeUser(deliveryPartnerId) {
     // Subscribe the user to push notifications
     const subscription = await registration.pushManager.subscribe({
       userVisibleOnly: true,
-      applicationServerKey: urlBase64ToUint8Array(publicVapidKey),
+      applicationServerKey: urlBase64ToUint8Array(process.env.publicVapidKey),
     });
 
     // Send the subscription object to the backend to store it

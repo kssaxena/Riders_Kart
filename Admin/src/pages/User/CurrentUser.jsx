@@ -2,7 +2,7 @@ import React, { useEffect, useRef, useState } from "react";
 import ButtonWrapper from "../../Components/Buttons";
 import Card from "../../Components/Card";
 import { User } from "lucide-react";
-import { useParams } from "react-router-dom";
+import { Link, useParams } from "react-router-dom";
 import Lottie from "lottie-react";
 import Loading from "../../assets/Loading/Loading.json";
 import { FetchData } from "../../Utils/fetchFromAPI";
@@ -198,7 +198,12 @@ const CurrentUser = () => {
         {filteredOrders?.map((order, index) => (
           <div key={order._id} className="p-4 border-b border-gray-200 w-full">
             <h1 className="font-semibold">Order {index + 1}</h1>
-            <h2>ID: {order._id}</h2>
+            <Link
+              to={`/current-order/${order._id}`}
+              className="hover:text-blue-500 hover:underline hover:underline-cyan-500"
+            >
+              ID: {order._id}
+            </Link>
           </div>
         ))}
       </Card>

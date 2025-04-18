@@ -1,6 +1,7 @@
 import React, { useState } from "react";
 import { FAQ_List } from "../../Constants/homeConstants";
 import { ChevronDown, ChevronUp } from "lucide-react";
+import { motion } from "framer-motion";
 
 const FAQs = () => {
   // Constants
@@ -8,15 +9,19 @@ const FAQs = () => {
   // UI for questions
   const Question_Answer = ({ item, index }) => {
     return (
-      <div className="my-10 hover:border border-[#949597] px-10 py-5 rounded-xl bg-primary">
+      <motion.div
+        
+        className="my-10 hover:border border-[#949597] laptop:px-10 laptop:py-5 phone:px-5 phone:py-2 rounded-xl bg-primary"
+        initial={{ opacity: 0, scale: 0.95 }}
+        animate={{ opacity: 1, scale: 1 }}
+        transition={{ duration: 0.3, ease: "easeInOut" }}
+      >
         {isOpened === index ? (
           <button
-            className="mx-5 w-full flex justify-between"
-            onClick={() => {
-              setIsOpened(null);
-            }}
+            className="laptop:mx-5 w-full flex justify-between items-center"
+            onClick={() => setIsOpened(null)}
           >
-            <h1 className="text-[1.5rem] phone:text-[1.25rem] font-Fredoka text-start heading-text-gray ">
+            <h1 className="laptop:text-xl phone:text-sm font-Fredoka text-start heading-text-gray">
               {item?.question}
             </h1>
             <span>
@@ -26,11 +31,9 @@ const FAQs = () => {
         ) : (
           <button
             className="mx-5 w-full flex justify-between"
-            onClick={() => {
-              setIsOpened(index);
-            }}
+            onClick={() => setIsOpened(index)}
           >
-            <h1 className="text-[1.5rem] phone:text-[1.25rem] font-Fredoka  text-start heading-text-gray">
+            <h1 className="laptop:text-xl phone:text-sm font-Fredoka text-start heading-text-gray">
               {item?.question}
             </h1>
             <span>
@@ -38,17 +41,32 @@ const FAQs = () => {
             </span>
           </button>
         )}
-        {isOpened === index && (
-          <h1 className="mx-7 font-Fredoka para-text-gray para-text-gray p-4">
-            {item?.answer}
-          </h1>
-        )}
-      </div>
+
+        <motion.div
+          initial={{ height: 0, opacity: 0 }}
+          animate={
+            isOpened === index
+              ? { height: "auto", opacity: 1 }
+              : { height: 0, opacity: 0 }
+          }
+          transition={{ duration: 0.3, ease: "easeInOut" }}
+          className="overflow-hidden"
+        >
+          {isOpened === index && (
+            <h1 className="laptop:mx-7 phone:mx-2 phone:text-xs laptop:text-base font-Fredoka para-text-gray laptop:p-4 phone:p-2">
+              {item?.answer}
+            </h1>
+          )}
+        </motion.div>
+      </motion.div>
     );
   };
 
   return (
-    <div className="flex flex-col justify-center items-center bg-[#D5D5D7]">
+    <div
+      id="FAQ"
+      className="flex flex-col justify-center items-center bg-[#D5D5D7]"
+    >
       {/* Heading */}
       <div className="Heading flex flex-col justify-center items-center">
         <h1 className="text-[3rem] font-semibold phone:text-[1.5rem] heading-text-gray font-Fredoka ">
