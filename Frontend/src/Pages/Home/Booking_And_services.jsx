@@ -255,13 +255,13 @@ const Booking_And_services = () => {
                 </button>
               </div>
 
+              {/* Booking section for mobile*/}
               <div className="flex gap-5 laptop:hidden w-fit justify-center items-center">
                 {/* <div className="laptop:hidden flex w-40 tablet:w-fit overflow-hidden overflow-x-scroll"> */}
                 <div className="hidden lg-block flex w-40 tablet:w-fit overflow-hidden overflow-x-scroll justify-start items-start">
                   {VehicleData.map((field, index) => (
                     <Vehicle key={index} field={field} />
                   ))}
-                  <div></div>
                 </div>
 
                 {/* Estimation Btn */}
@@ -280,11 +280,10 @@ const Booking_And_services = () => {
                 </div>
               </div>
 
-              {/* Vehicle */}
+              {/* Booking section for laptop*/}
               <div className="Vehicle phone:hidden laptop:flex px-5 rounded-xl ">
                 <div className="flex w-full h-[100%] justify-center items-start py-16 gap-10 text-black ">
                   {/* All vehicles */}
-
                   <a
                     href="https://ecom.riderskart.in/"
                     target="_blank"
