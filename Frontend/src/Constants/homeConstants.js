@@ -19,7 +19,7 @@ import Vector5 from "../assets/Home/Vector5.png";
 
 export const VehicleData = [
   {
-    name: "Two Wheelers",
+    name: "Book Parcel",
     icon: Bike,
   },
   {
@@ -30,7 +30,6 @@ export const VehicleData = [
     name: "Affordable House sifting",
     icon: EShiftingImage,
   },
- 
 ];
 
 export const allVehicle = [

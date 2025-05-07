@@ -128,11 +128,8 @@ const Booking_And_services = () => {
           <span>Most favorable application for sending Parcels </span>
         </h1>
         <div className="w-[90vw] flex flex-wrap justify-evenly tablet:w-fit overflow-hidden items-center   ">
-          {VehicleData.map((field, index) => (
-            <Vehicle key={index} field={field} />
-          ))}
           <a
-            href="https://ecom.businessmarathonindia.in/"
+            href="https://ecom.riderskart.in/"
             target="_blank"
             rel="noopener noreferrer"
             className="flex flex-col justify-center items-center m-2"
@@ -148,13 +145,16 @@ const Booking_And_services = () => {
               E Commerce Services
             </h3>
           </a>
+          {VehicleData.map((field, index) => (
+            <Vehicle key={index} field={field} />
+          ))}
         </div>
-        <button
+        {/* <button
           onClick={openPopup}
           className="px-4 py-2 mt-2 text-xl rounded-2xl drop-shadow-xl hover:scale-105 hover:drop-shadow-2xl transition duration-150 ease-in-out bg-[#DF3F33] text-white"
         >
           Tap to book parcel
-        </button>
+        </button> */}
 
         {/* Popup Modal */}
         {isOpen && (
@@ -255,13 +255,13 @@ const Booking_And_services = () => {
                 </button>
               </div>
 
+              {/* Booking section for mobile*/}
               <div className="flex gap-5 laptop:hidden w-fit justify-center items-center">
                 {/* <div className="laptop:hidden flex w-40 tablet:w-fit overflow-hidden overflow-x-scroll"> */}
                 <div className="hidden lg-block flex w-40 tablet:w-fit overflow-hidden overflow-x-scroll justify-start items-start">
                   {VehicleData.map((field, index) => (
                     <Vehicle key={index} field={field} />
                   ))}
-                  <div></div>
                 </div>
 
                 {/* Estimation Btn */}
@@ -280,15 +280,12 @@ const Booking_And_services = () => {
                 </div>
               </div>
 
-              {/* Vehicle */}
+              {/* Booking section for laptop*/}
               <div className="Vehicle phone:hidden laptop:flex px-5 rounded-xl ">
                 <div className="flex w-full h-[100%] justify-center items-start py-16 gap-10 text-black ">
                   {/* All vehicles */}
-                  {VehicleData.map((field, index) => (
-                    <Vehicle key={index} field={field} />
-                  ))}
                   <a
-                    href="https://ecom.businessmarathonindia.in/"
+                    href="https://ecom.riderskart.in/"
                     target="_blank"
                     rel="noopener noreferrer"
                     className="flex flex-col justify-center items-center m-2"
@@ -304,9 +301,12 @@ const Booking_And_services = () => {
                       E Commerce Services
                     </h3>
                   </a>
+                  {VehicleData.map((field, index) => (
+                    <Vehicle key={index} field={field} />
+                  ))}
 
                   {/* Estimation Btn */}
-                  <div>
+                  {/* <div>
                     <Link
                       to={`/booking`}
                       className=" h-32 w-32 p-2 my-3  flex flex-col justify-between text-white rounded-2xl drop-shadow-lg hover:scale-110 hover:drop-shadow-2xl transition duration-200 ease-in-out bg-[#DF3F33]"
@@ -316,7 +316,7 @@ const Booking_And_services = () => {
                         <CornerDownRight />
                       </span>
                     </Link>
-                  </div>
+                  </div> */}
                 </div>
               </div>
             </div>
