@@ -21,7 +21,7 @@ import { useDispatch } from "react-redux";
 import { addUser, clearUser } from "./utility/Slice/UserInfoSlice";
 import { addAllAppointment } from "./utility/Slice/AllAppointmentsSlice";
 import { parseErrorMessage } from "./utility/ErrorMessageParser";
-import { alertError, alertSuccess } from "./utility/Alert";
+import { alertError } from "./utility/Alert";
 import socket from "./socket";
 import ApiRequests from "./Pages/API_Requests/ApiRequests";
 
@@ -114,31 +114,31 @@ const App = () => {
   }, []);
 
   return (
-    <div className="bg-[#D5D5D7] overflow-hidden font-Fredoka">
+    <div className='bg-[#D5D5D7] overflow-hidden font-Fredoka'>
       <Header />
       <Routes>
-        <Route path="/" element={<Home />} />
-        <Route path="/login" element={<LogIn />} />
-        <Route path="/register" element={<Register />} />
-        <Route path="/booking" element={<Booking />} />
-        <Route path="/all-orders" element={<AllOrders />} />
-        <Route path="/delivery-partners" element={<DeliveryPartners />} />
-        <Route path="/register-driver" element={<RegisterDriver />} />
-        <Route path="/drivers-home" element={<DeliveryPartnerHome />} />
+        <Route path='/' element={<Home />} />
+        <Route path='/login' element={<LogIn />} />
+        <Route path='/register' element={<Register />} />
+        <Route path='/booking' element={<Booking />} />
+        <Route path='/all-orders' element={<AllOrders />} />
+        <Route path='/delivery-partners' element={<DeliveryPartners />} />
+        <Route path='/register-driver' element={<RegisterDriver />} />
+        <Route path='/drivers-home' element={<DeliveryPartnerHome />} />
 
-        <Route path="/user-profile/:userId" element={<UserProfile />} />
+        <Route path='/user-profile/:userId' element={<UserProfile />} />
 
-        <Route path="/current-order/:orderId" element={<CurrentProduct />} />
+        <Route path='/current-order/:orderId' element={<CurrentProduct />} />
         <Route
-          path="/delivery-partner-profile/:id"
+          path='/delivery-partner-profile/:id'
           element={<DeliveryPartnerProfile />}
         />
-        <Route path="/all-appointments" element={<AllAppointments />} />
-        <Route path="/api-requests/:userId" element={<ApiRequests />} />
+        <Route path='/all-appointments' element={<AllAppointments />} />
+        <Route path='/api-requests/:userId' element={<ApiRequests />} />
 
         {/* {--------------------------------------payment page--------------------------------------} */}
-        <Route path="/payment-page" element={<PaymentPage />} />
-        <Route path="/wallet-page" element={<Wallet />} />
+        <Route path='/payment-page' element={<PaymentPage />} />
+        <Route path='/wallet-page' element={<Wallet />} />
         {/* {--------------------------------------Also done--------------------------------------} */}
       </Routes>
       <Footer />

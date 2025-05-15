@@ -14,6 +14,7 @@ const ApiRequests = () => {
   const user = useSelector((store) => store.UserInfo.user);
   const { userId } = useParams();
   const formRef = useRef();
+  const termsAndConditionRef = useRef();
   const [isOpen, setIsOpen] = useState(false);
   const navigate = useNavigate();
 
@@ -33,6 +34,10 @@ const ApiRequests = () => {
       console.error("Error submitting form:", error);
     }
   };
+
+  setTimeout(() => {
+    termsAndConditionRef.current?.scrollIntoView({ behavior: "smooth" });
+  }, 100);
 
   // UI elements for the API request form
   const ApiForm = () => {
@@ -222,7 +227,7 @@ const ApiRequests = () => {
 
   const TermsAndConditions = () => {
     return (
-      <div className="max-w-3xl h-5/6 mx-auto p-6 backdrop-blur-lg rounded-lg shadow-md overflow-y-scroll no-scrollbar">
+      <div ref={termsAndConditionRef} className="max-w-3xl h-5/6 mx-auto p-6 backdrop-blur-lg rounded-lg shadow-md overflow-y-scroll no-scrollbar">
         <h1 className="text-3xl font-semibold text-gray-800 mb-4">
           API Key Terms and Conditions
         </h1>

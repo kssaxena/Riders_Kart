@@ -51,7 +51,7 @@ const Booking_And_services = () => {
         style={{ width: "80vw", left: "15vw" }}
       >
         <div
-          className="flex gap-10 mt-10"
+          className="flex gap-20 mt-10"
           style={{
             transform: `translateX(-${offset}px)`,
             transition: "transform 0.5s ease-in-out",
@@ -124,7 +124,7 @@ const Booking_And_services = () => {
     return (
       <div className="flex flex-col  justify-center items-center h-fit bg-transparent laptop:hidden ">
         <h1 className="flex flex-col justify-center items-center gap-2">
-          <span className="text-4xl font-semibold">Rider's Kart</span>
+          <span className="text-4xl font-semibold ">Rider's Kart</span>
           <span>Most favorable application for sending Parcels </span>
         </h1>
         <div className="w-[90vw] flex flex-wrap justify-evenly tablet:w-fit overflow-hidden items-center   ">
@@ -221,23 +221,23 @@ const Booking_And_services = () => {
   };
 
   return (
-    <div className="BODY  flex flex-col justify-center items-center bg-[#D5D5D7] select-none">
+    <div className='BODY  flex flex-col justify-center items-center bg-[#D5D5D7] select-none'>
       {/* Bg Image and text */}
-      <div className="BG-and-Text relative phone:h-[70vh] laptop:h-[70vh]  tablet:h-[30vh] overflow-hidden">
+      <div className='BG-and-Text relative phone:h-[70vh] laptop:h-[70vh]  tablet:h-[30vh] overflow-hidden'>
         <img
           src={HomeBackGround}
-          alt=""
-          className="w-full phone:h-full laptop:h-auto"
+          alt=''
+          className='w-full phone:h-full laptop:h-auto'
         />
-        <div className="absolute z-10 w-full h-4/5 text-center top-0 heading-text-gray flex gap-10 laptop:justify-center items-center phone:justify-start phone:mt-5  tablet:mt-10 ">
+        <div className='absolute z-10 w-full h-4/5 text-center top-0 heading-text-gray flex gap-10 laptop:justify-center items-center phone:justify-start phone:mt-5  tablet:mt-10 '>
           {/* <PopupButton /> */}
-          <div className=" z-10 w-full h-4/5 text-center  heading-text-gray flex flex-col laptop:justify-center items-center phone:justify-start phone:mt-5  tablet:mt-10  ">
+          <div className=' z-10 w-full h-4/5 text-center  heading-text-gray flex flex-col laptop:justify-center items-center phone:justify-start phone:mt-5  tablet:mt-10  '>
             {/* booking section */}
-            <div className="Booking-section relative lg:mx-20 bg-transparent rounded-xl  drop-shadow-lg p-4 lg:p-0 text-black backdrop-blur-sm shadow-neutral-600 shadow-2xl laptop:block phone:hidden">
+            <div className='Booking-section relative lg:mx-20 bg-transparent rounded-xl  drop-shadow-lg p-4 lg:p-0 text-black backdrop-blur-sm shadow-neutral-600 shadow-2xl laptop:block phone:hidden'>
               {/* City btn */}
-              <div className=" City-btn w-full laptop:hidden ">
+              <div className=' City-btn w-full laptop:hidden '>
                 <button
-                  className="flex mx-5 mt-3"
+                  className='flex mx-5 mt-3'
                   onClick={() => {
                     setCityMenu({
                       isOpened: true,
@@ -246,19 +246,19 @@ const Booking_And_services = () => {
                   }}
                 >
                   <span>
-                    <MapPin width={15} color="#93161a" />
+                    <MapPin width={15} color='#93161a' />
                   </span>
-                  <span className="ml-2 text-sm"> City:</span>{" "}
-                  <span className="font-bold mx-2 text-sm heading-text-gray">
+                  <span className='ml-2 text-sm'> City:</span>{" "}
+                  <span className='font-bold mx-2 text-sm heading-text-gray'>
                     Ranchi
                   </span>
                 </button>
               </div>
 
               {/* Booking section for mobile*/}
-              <div className="flex gap-5 laptop:hidden w-fit justify-center items-center">
+              <div className='flex gap-5 laptop:hidden w-fit justify-center items-center'>
                 {/* <div className="laptop:hidden flex w-40 tablet:w-fit overflow-hidden overflow-x-scroll"> */}
-                <div className="hidden lg-block flex w-40 tablet:w-fit overflow-hidden overflow-x-scroll justify-start items-start">
+                <div className='hidden lg-block flex w-40 tablet:w-fit overflow-hidden overflow-x-scroll justify-start items-start'>
                   {VehicleData.map((field, index) => (
                     <Vehicle key={index} field={field} />
                   ))}
@@ -268,12 +268,12 @@ const Booking_And_services = () => {
                 <div>
                   <Link
                     to={`/booking`}
-                    className=" phone:w-32 h-32  tablet:w-36 p-2  flex flex-col justify-between bg-secondary-color rounded-2xl drop-shadow-lg hover:scale-110  hover:drop-shadow-2xl transition duration-200 ease-in-out bg-[#DF3F33]"
+                    className=' phone:w-32 h-32  tablet:w-36 p-2  flex flex-col justify-between bg-secondary-color rounded-2xl drop-shadow-lg hover:scale-110  hover:drop-shadow-2xl transition duration-200 ease-in-out bg-[#DF3F33]'
                   >
-                    <span className="text-xl  heading-text-gray">
+                    <span className='text-xl  heading-text-gray'>
                       Book a parcel{" "}
                     </span>
-                    <span className=" heading-text-gray">
+                    <span className=' heading-text-gray'>
                       <CornerDownRight />
                     </span>
                   </Link>
@@ -281,23 +281,23 @@ const Booking_And_services = () => {
               </div>
 
               {/* Booking section for laptop*/}
-              <div className="Vehicle phone:hidden laptop:flex px-5 rounded-xl ">
-                <div className="flex w-full h-[100%] justify-center items-start py-16 gap-10 text-black ">
+              <div className='Vehicle phone:hidden laptop:flex px-5 rounded-xl '>
+                <div className='flex w-full h-[100%] justify-center items-start py-16 gap-10 text-black '>
                   {/* All vehicles */}
                   <a
-                    href="https://ecom.riderskart.in/"
-                    target="_blank"
-                    rel="noopener noreferrer"
-                    className="flex flex-col justify-center items-center m-2"
+                    href='https://ecom.riderskart.in/'
+                    target='_blank'
+                    rel='noopener noreferrer'
+                    className='flex flex-col justify-center items-center m-2'
                   >
-                    <div className="Img laptop:w-28 phone:w-14 bg-primary rounded-lg overflow-hidden drop-shadow-lg hover:drop-shadow-xl p-2">
+                    <div className='Img laptop:w-28 phone:w-14 bg-primary rounded-lg overflow-hidden drop-shadow-lg hover:drop-shadow-xl p-2'>
                       <img
                         src={Ecom}
-                        alt=""
-                        className="hover:scale-105 transition duration-200 ease-in-out rounded-lg"
+                        alt=''
+                        className='hover:scale-105 transition duration-200 ease-in-out rounded-lg'
                       />
                     </div>
-                    <h3 className="name text-center w-24 text-sm mt-2 ">
+                    <h3 className='name text-center w-24 text-sm mt-2 '>
                       E Commerce Services
                     </h3>
                   </a>
@@ -330,25 +330,25 @@ const Booking_And_services = () => {
 
       {/* Our Services */}
       <section
-        id="services"
-        className="Our-Services  w-full h-fit mb-20  relative inset-0 bg-white bg-[linear-gradient(to_right,#f0f0f0_1px,transparent_1px),linear-gradient(to_bottom,#f0f0f0_1px,transparent_1px)] bg-[size:6rem_4rem]"
+        id='services'
+        className='Our-Services  w-full h-fit mb-20  relative inset-0 bg-white bg-[linear-gradient(to_right,#f0f0f0_1px,transparent_1px),linear-gradient(to_bottom,#f0f0f0_1px,transparent_1px)] bg-[size:6rem_4rem]'
       >
         {/* <div class="absolute inset-0 -z-10 h-full w-full bg-white bg-[linear-gradient(to_right,#f0f0f0_1px,transparent_1px),linear-gradient(to_bottom,#f0f0f0_1px,transparent_1px)] bg-[size:6rem_4rem]"></div> */}
         {/* Title */}
-        <div className="Title pt-10  flex flex-col justify-center items-center">
-          <span className="  h-14 font-semibold text-[3rem]  heading-text-gray">
-            Our Services
+        <div className='Title pt-10  flex flex-col justify-center items-center'>
+          <span className='  h-14 font-semibold font-Fredoka text-[3rem]  heading-text-gray'>
+            Our Services 
           </span>
         </div>
 
         {/* Our services card for mobile */}
-        <div className="OurServices overflow-hidden relative tablet:hidden mt-10">
+        <div className='OurServices overflow-hidden relative tablet:hidden mt-10'>
           <div
             className={`flex phone:flex-col transition ease-out duration-100 justify-center items-center phone:w-full`}
           >
             {OurServices.map((item, index) => {
               return (
-                <div key={index} className="phone:w-3/4 phone:mx-2">
+                <div key={index} className='phone:w-3/4 phone:mx-2'>
                   <OurServicesCard field={item} />
                 </div>
               );
@@ -357,8 +357,11 @@ const Booking_And_services = () => {
         </div>
 
         {/* All services */}
-        <div className="All-Services relative overflow-hidden phone:hidden tablet:flex flex justify-center items-center ">
-          <div className="w-[90%] flex justify-center items-center pr-96">
+        <div
+          className='All-Services relative overflow-hidden phone:hidden tablet:flex flex justify-center items-center '
+          id='services'
+        >
+          <div className='w-[90%] flex justify-center items-center pr-96'>
             <OurServicesSlider />
           </div>
         </div>
