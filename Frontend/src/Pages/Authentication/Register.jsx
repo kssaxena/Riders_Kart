@@ -8,8 +8,9 @@ import { parseErrorMessage } from "../../utility/ErrorMessageParser";
 import { FetchData } from "../../utility/fetchFromAPI";
 import { addUser, clearUser } from "../../utility/Slice/UserInfoSlice";
 import Input from "../../Components/Input";
+import LoadingUI from "../../Components/Loading";
 
-const Register = () => {
+const Register = ({ startLoading, stopLoading }) => {
   // All Variables declaration for this components
   const FormRef = useRef(null);
   const [showPassword, setShowPassword] = useState("password");
@@ -36,6 +37,7 @@ const Register = () => {
     }
 
     try {
+      startLoading();
       const response = await FetchData("user/register", "post", formData);
 
       console.log(response);
@@ -68,6 +70,8 @@ const Register = () => {
     } catch (error) {
       console.log(error);
       // alertError(parseErrorMessage(error.response.data));
+    } finally {
+      stopLoading();
     }
   };
 
@@ -176,4 +180,4 @@ const Register = () => {
   );
 };
 
-export default Register;
+export default LoadingUI(Register);

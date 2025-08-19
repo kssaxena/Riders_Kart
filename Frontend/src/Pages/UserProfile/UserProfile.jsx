@@ -32,7 +32,7 @@ const UserProfile = () => {
     const fetchAPIKeys = async () => {
       try {
         const response = await FetchData("user/api-key/:apiKeyId", "get");
-        // console.log(response);
+        console.log(response);
         setApiKeys(response?.data?.data);
       } catch (error) {
         console.error("Error submitting form:");
@@ -147,29 +147,37 @@ const UserProfile = () => {
           <div className="h-56 overflow-y-scroll">
             <h1>All API keys</h1>
             <div className="flex flex-col gap-2">
-              {apiKeys?.map((elements) => (
-                <div
-                  key={elements._id}
-                  className="flex justify-between items-center p-2 border-b border-gray-200"
-                >
-                  <span className="w-20 overflow-hidden">{elements.key}</span>
-                  <span className="w-32 overflow-hidden">
-                    Type: {elements.type}
-                  </span>
-                  <span className="w-20 overflow-hidden">
-                    {elements.expiresAt}
-                  </span>
-                  <button
-                    onClick={() => {
-                      handleAPIDelete(elements._id);
-                      // Handle API key deletion here
-                    }}
-                    className="text-red-500 hover:text-red-700"
-                  >
-                    Delete
-                  </button>
+              {apiKeys.length ? (
+                <div>
+                  {apiKeys?.map((elements) => (
+                    <div
+                      key={elements._id}
+                      className="flex justify-between items-center p-2 border-b border-gray-200"
+                    >
+                      <span className="w-20 overflow-hidden">
+                        {elements.key}
+                      </span>
+                      <span className="w-32 overflow-hidden">
+                        Type: {elements.type}
+                      </span>
+                      <span className="w-20 overflow-hidden">
+                        {elements.expiresAt}
+                      </span>
+                      <button
+                        onClick={() => {
+                          handleAPIDelete(elements._id);
+                          // Handle API key deletion here
+                        }}
+                        className="text-red-500 hover:text-red-700"
+                      >
+                        Delete
+                      </button>
+                    </div>
+                  ))}
                 </div>
-              ))}
+              ) : (
+                <h1>No Data Found</h1>
+              )}
             </div>
           </div>
         </Card>
