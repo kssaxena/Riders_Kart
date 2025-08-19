@@ -13,10 +13,11 @@ import LogInImg from "../../assets/Home/LogIn1.jpeg";
 import LoginDriverImg from "../../assets/Home/LoginDriverImg.jpg";
 import Input from "../../Components/Input";
 import { Check } from "lucide-react";
+import LoadingUI from "../../Components/Loading";
 
 const socket = io(process.env.DomainUrl);
 
-const LogIn = () => {
+const LogIn = ({ startLoading, stopLoading }) => {
   // Utility variables
   const FormRef = useRef(null);
   const [selectedForm, setSelectedForm] = useState("Personal");
@@ -39,6 +40,7 @@ const LogIn = () => {
       selectedForm === "Personal" ? "user/login" : "driver/login";
 
     try {
+      startLoading();
       const response = await FetchData(partialUrl, "post", formData);
 
       console.log(response);
@@ -89,6 +91,8 @@ const LogIn = () => {
     } catch (error) {
       console.log(error);
       alertError(parseErrorMessage(error.response.data));
+    } finally {
+      stopLoading();
     }
   };
 
@@ -318,4 +322,4 @@ const LogIn = () => {
   );
 };
 
-export default LogIn;
+export default LoadingUI(LogIn);

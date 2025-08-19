@@ -19,6 +19,7 @@ const Header = () => {
 
   // //console.log(user);
   const location = useLocation();
+  const isEnterprise = location.pathname === "/";
 
   //  UI for Hamburger
   const menuVariants = {
@@ -140,16 +141,16 @@ const Header = () => {
   };
 
   return (
-    <div className="bg-[#D5D5D7] Header flex laptop:justify-around items-center sticky top-0 bg-primary z-50 drop-shadow-xl h-20 font-Fredoka ">
+    <div className='bg-[#D5D5D7] Header flex laptop:justify-around items-center sticky top-0 bg-primary z-50 drop-shadow-xl h-20 font-Fredoka '>
       {/* Hamburger for phone and tab view */}
-      <div className="Hamburger ml-2 laptop:hidden">
+      <div className='Hamburger ml-2 laptop:hidden'>
         <button
-          className="laptop:hidden mobile:block"
+          className='laptop:hidden mobile:block'
           onClick={() => setShowHamburger(true)}
         >
           <AlignLeft
             size={25}
-            className="m-1 group-hover:text-black text-black lg:hidden font-light"
+            className='m-1 group-hover:text-black text-black lg:hidden font-light'
           />
         </button>
 
@@ -164,45 +165,76 @@ const Header = () => {
 
       <div
         onClick={() => navigate("/")}
-        className="logo phone:mx-5  laptop:m-0 phone:flex justify-center items-center cursor-pointer"
+        className='logo phone:mx-5  laptop:m-0 phone:flex justify-center items-center cursor-pointer'
       >
         <img
           src={Logo}
-          alt="Logo"
+          alt='Logo'
           title={`Rider's Kart`}
-          className="w-16 tablet:block"
+          className='w-16 tablet:block'
         />
-        <h1 className="phone:text-lg tablet:text-2xl laptop:block font-Exo heading-text-gray phone:hidden">
+        <h1 className='phone:text-lg tablet:text-2xl laptop:block font-Exo heading-text-gray phone:hidden'>
           Rider's Kart
         </h1>
       </div>
 
       {user && user[1]?.driver === false && user[1]?.personal === true && (
-        <div className="navigation hidden laptop:flex gap-12">
+        // <div className="navigation hidden laptop:flex gap-12">
+        //   <Link
+        //     className={`font-serif ${
+        //       location.pathname === "/" &&
+        //       "px-4 py-2 rounded-2xl bg-button drop-shadow-xl hover:scale-105 hover:drop-shadow-2xl transition duration-150 ease-in-out text-xl"
+        //       // "bg-button underline text-xl heading-text-gray px-5 py-2 rounded-xl"
+        //     }`}
+        //     to={`/`}
+        //   >
+        //     For Enterprise/ Personal
+        //   </Link>
+        //   <Link
+        //     className={`font-serif ${
+        //       location.pathname === "/delivery-partners" &&
+        //       "px-4 py-2 rounded-2xl bg-button drop-shadow-xl hover:scale-105 hover:drop-shadow-2xl transition duration-150 ease-in-out text-xl"
+        //       // "bg-button underline text-xl heading-text-gray"
+        //     }`}
+        //     to={"/delivery-partners"}
+        //   >
+        //     For Delivery Partner
+        //   </Link>
+        // </div>
+        <div className='relative w-fit bg-gray-200 rounded-full p-1 hidden laptop:flex gap-2'>
+          {/* Moving Background */}
+          <motion.div
+            layout
+            transition={{ type: "spring", stiffness: 500, damping: 30 }}
+            className={`absolute top-1 ${
+              isEnterprise ? "left-1" : "left-[49%]"
+            } h-[90%] w-1/2 bg-button rounded-full z-0`}
+            // style={{
+            //   transform: isEnterprise ? "translateX(0%)" : "translateX(500px)",
+            // }}
+          />
+
+          {/* Links */}
           <Link
-            className={`font-serif ${
-              location.pathname === "/" &&
-              "px-4 py-2 rounded-2xl bg-button drop-shadow-xl hover:scale-105 hover:drop-shadow-2xl transition duration-150 ease-in-out text-xl"
-              // "bg-button underline text-xl heading-text-gray px-5 py-2 rounded-xl"
+            className={`relative z-10 px-6 py-2 rounded-full font-serif text-lg transition-all duration-200 ${
+              isEnterprise ? "text-white" : "text-gray-800"
             }`}
-            to={`/`}
+            to='/'
           >
-            For Enterprise/ Personal
+            For Enterprise/Personal
           </Link>
           <Link
-            className={`font-serif ${
-              location.pathname === "/delivery-partners" &&
-              "px-4 py-2 rounded-2xl bg-button drop-shadow-xl hover:scale-105 hover:drop-shadow-2xl transition duration-150 ease-in-out text-xl"
-              // "bg-button underline text-xl heading-text-gray"
+            className={`relative z-10 px-6 py-2 rounded-full font-serif text-lg transition-all duration-200 ${
+              !isEnterprise ? "text-white" : "text-gray-800"
             }`}
-            to={"/delivery-partners"}
+            to='/delivery-partners'
           >
             For Delivery Partner
           </Link>
         </div>
       )}
 
-      <div className="support hidden laptop:flex laptop:justify-center items-center gap-5">
+      <div className='support hidden laptop:flex laptop:justify-center items-center gap-5'>
         <ButtonWrapper
           onClick={() => {
             navigate("/");
@@ -253,7 +285,7 @@ const Header = () => {
               </ButtonWrapper>
             </div>
           ) : (
-            <div className="flex gap-4">
+            <div className='flex gap-4'>
               <ButtonWrapper
                 onClick={() => {
                   navigate("/all-orders");
@@ -273,7 +305,7 @@ const Header = () => {
             </div>
           )
         ) : null}
-        <Link className="font-sans" to={`#`}>
+        <Link className='font-sans' to={`#`}>
           Support
         </Link>
       </div>

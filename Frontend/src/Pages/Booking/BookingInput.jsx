@@ -171,24 +171,24 @@ export default function BookingInput({ userAddress, userCords }) {
     }, []);
 
     return (
-      <div className="flex flex-row w-full h-screen bg-[#FFFFFF]">
+      <div className='flex flex-row w-full h-screen bg-[#FFFFFF]'>
         <div
           ref={mapRef}
-          className="main_map w-full h-full rounded-md shadow-lg bg-[#D5D5D7]"
+          className='main_map w-full h-full rounded-md shadow-lg bg-[#D5D5D7]'
         ></div>
 
         {/* Map UI */}
-        <div className="absolute backdrop-blur-lg right-0 bottom-0 h-fit py-10 px-5 rounded-xl">
+        <div className='absolute backdrop-blur-lg right-0 bottom-0 h-fit py-10 px-5 rounded-xl'>
           <input
             ref={inputRef}
-            type="text"
-            className="w-full p-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500"
-            placeholder="Search for a location..."
+            type='text'
+            className='w-full p-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500'
+            placeholder='Search for a location...'
           />
           {/* Display selected address */}
           <input
-            type="text"
-            className="w-full text-black p-2 border border-gray-300 rounded-md shadow-sm mt-2 bg-gray-100"
+            type='text'
+            className='w-full text-black p-2 border border-gray-300 rounded-md shadow-sm mt-2 bg-gray-100'
             value={address}
             readOnly
           />
@@ -369,24 +369,24 @@ export default function BookingInput({ userAddress, userCords }) {
   // UI for Different forms
   function SenderDetails() {
     return (
-      <div className="">
+      <div className=''>
         {/* Form Heading and address */}
-        <div className="mb-6 flex items-center justify-between">
-          <h2 className="text-2xl font-bold">{formSections[currentSection]}</h2>
-          <div className="flex items-center text-sm text-gray-600">
-            <MapPin className="w-4 h-4 mr-1" />
-            <span className="phone:hidden laptop:block">
+        <div className='mb-6 flex items-center justify-between'>
+          <h2 className='text-2xl font-bold'>{formSections[currentSection]}</h2>
+          <div className='flex items-center text-sm text-gray-600'>
+            <MapPin className='w-4 h-4 mr-1' />
+            <span className='phone:hidden laptop:block'>
               {sender.senderAddress}
             </span>
-            <span className="phone:block laptop:hidden">{address}</span>
-            <span className="phone:hidden laptop:block">{sender.address}</span>
+            <span className='phone:block laptop:hidden'>{address}</span>
+            <span className='phone:hidden laptop:block'>{sender.address}</span>
           </div>
         </div>
 
         {/* Form */}
-        <div className="grid laptop:grid-cols-4 phone:grid-cols-1 tablet:grid-cols-2 gap-4">
+        <div className='grid laptop:grid-cols-4 phone:grid-cols-1 tablet:grid-cols-2 gap-4'>
           <div className={`laptop:hidden`}>
-            <Label htmlFor="senderHouseNumber">Sender's House</Label>
+            <Label htmlFor='senderHouseNumber'>Sender's House</Label>
             <ButtonWrapper
               onClick={() => {
                 setIsOpen(true);
@@ -397,15 +397,15 @@ export default function BookingInput({ userAddress, userCords }) {
             />
 
             {isOpen && (
-              <div className="absolute bg-black bg-opacity-90 backdrop-blur-xl flex justify-start items-start w-screen z-50 h-full flex-col overscroll-auto -top-10 text-white -left-[43px]">
+              <div className='absolute bg-black bg-opacity-90 backdrop-blur-xl flex justify-start items-start w-screen z-50 h-full flex-col overscroll-auto -top-10 text-white -left-[43px]'>
                 {/* Close Button */}
-                <div className="rounded-lg shadow-lg w-full overflow-y-scroll">
-                  <h2 className="text-xl mt-10 mb-4 flex items-center justify-around ">
+                <div className='rounded-lg shadow-lg w-full overflow-y-scroll'>
+                  <h2 className='text-xl mt-10 mb-4 flex items-center justify-around '>
                     Select your location
                     <span>
                       <button
                         onClick={() => setIsOpen(false)}
-                        className=" bg-red-600 text-white rounded-lg hover:bg-red-700 transition px-2 py-1"
+                        className=' bg-red-600 text-white rounded-lg hover:bg-red-700 transition px-2 py-1'
                       >
                         Confirm
                       </button>
@@ -417,36 +417,36 @@ export default function BookingInput({ userAddress, userCords }) {
             )}
           </div>
           <div>
-            <Label htmlFor="senderName">Sender's Name</Label>
+            <Label htmlFor='senderName'>Sender's Name</Label>
             <Input
-              id="senderName"
-              placeholder="Your Name"
+              id='senderName'
+              placeholder='Your Name'
               name={"senderName"}
             />
           </div>
           <div>
-            <Label htmlFor="senderEmail">Sender's Email</Label>
+            <Label htmlFor='senderEmail'>Sender's Email</Label>
             <Input
-              id="senderEmail"
-              type="email"
-              placeholder="user@gmail.com"
+              id='senderEmail'
+              type='email'
+              placeholder='user@gmail.com'
               name={"senderEmail"}
             />
           </div>
           <div>
-            <Label htmlFor="senderPhone">Sender's Phone Number</Label>
+            <Label htmlFor='senderPhone'>Sender's Phone Number</Label>
             <Input
-              id="senderPhone"
-              type="number"
-              placeholder="9955******"
+              id='senderPhone'
+              type='number'
+              placeholder='9955******'
               name={"senderNumber"}
             />
           </div>
           <div>
-            <Label htmlFor="senderHouseNumber">Sender's House</Label>
+            <Label htmlFor='senderHouseNumber'>Sender's House</Label>
             <Input
-              id="senderHouseNumber"
-              placeholder="Please enter"
+              id='senderHouseNumber'
+              placeholder='Please enter'
               name={"senderHouseNumber"}
             />
           </div>
@@ -459,18 +459,18 @@ export default function BookingInput({ userAddress, userCords }) {
     return (
       <div>
         {/* Form Heading and address */}
-        <div className="mb-6 flex items-center justify-between">
-          <h2 className="text-2xl font-bold">{formSections[currentSection]}</h2>
-          <div className="flex items-center text-sm text-gray-600">
-            <MapPin className="w-4 h-4 mr-1" />
+        <div className='mb-6 flex items-center justify-between'>
+          <h2 className='text-2xl font-bold'>{formSections[currentSection]}</h2>
+          <div className='flex items-center text-sm text-gray-600'>
+            <MapPin className='w-4 h-4 mr-1' />
             <span>{receiver.receiverAddress}</span>
           </div>
         </div>
 
         {/* Form */}
-        <div className="grid laptop:grid-cols-4 phone:grid-cols-1 tablet:grid-cols-2 gap-4">
+        <div className='grid laptop:grid-cols-4 phone:grid-cols-1 tablet:grid-cols-2 gap-4'>
           <div className={`laptop:hidden`}>
-            <Label htmlFor="senderHouseNumber">Receiver's House</Label>
+            <Label htmlFor='senderHouseNumber'>Receiver's House</Label>
             <ButtonWrapper
               onClick={() => setIsOpen(true)}
               children={"Select exact location"}
@@ -478,10 +478,10 @@ export default function BookingInput({ userAddress, userCords }) {
             />
 
             {isOpen && (
-              <div className="absolute bg-black bg-opacity-90 backdrop-blur-xl flex justify-start items-start w-screen z-50 h-full flex-col overscroll-auto -top-10 text-white -left-[43px]">
+              <div className='absolute bg-black bg-opacity-90 backdrop-blur-xl flex justify-start items-start w-screen z-50 h-full flex-col overscroll-auto -top-10 text-white -left-[43px]'>
                 {/* Close Button */}
-                <div className="rounded-lg shadow-lg w-full overflow-y-scroll">
-                  <h2 className="text-xl mt-10 mb-4 flex items-center justify-around ">
+                <div className='rounded-lg shadow-lg w-full overflow-y-scroll'>
+                  <h2 className='text-xl mt-10 mb-4 flex items-center justify-around '>
                     Select your location
                     <span>
                       <button
@@ -489,7 +489,7 @@ export default function BookingInput({ userAddress, userCords }) {
                           setIsOpen(false);
                           updateReceiverDetails(address, location);
                         }}
-                        className=" bg-red-600 text-white rounded-lg hover:bg-red-700 transition px-2 py-1"
+                        className=' bg-red-600 text-white rounded-lg hover:bg-red-700 transition px-2 py-1'
                       >
                         Confirm
                       </button>
@@ -501,36 +501,36 @@ export default function BookingInput({ userAddress, userCords }) {
             )}
           </div>
           <div>
-            <Label htmlFor="receiverName">Receiver's Name</Label>
+            <Label htmlFor='receiverName'>Receiver's Name</Label>
             <Input
-              id="receiverName"
+              id='receiverName'
               placeholder="Receiver's Name"
               name={"receiverName"}
             />
           </div>
           <div>
-            <Label htmlFor="receiverEmail">Receiver's Email</Label>
+            <Label htmlFor='receiverEmail'>Receiver's Email</Label>
             <Input
-              id="receiverEmail"
-              type="email"
-              placeholder="receiver@gmail.com"
+              id='receiverEmail'
+              type='email'
+              placeholder='receiver@gmail.com'
               name={"receiverEmail"}
             />
           </div>
           <div>
-            <Label htmlFor="receiverPhone">Receiver's Phone Number</Label>
+            <Label htmlFor='receiverPhone'>Receiver's Phone Number</Label>
             <Input
-              id="receiverPhone"
-              type="number"
-              placeholder="Phone Number"
+              id='receiverPhone'
+              type='number'
+              placeholder='Phone Number'
               name={"receiverNumber"}
             />
           </div>
           <div>
-            <Label htmlFor="recieverHouseNumber">Receiver's House</Label>
+            <Label htmlFor='recieverHouseNumber'>Receiver's House</Label>
             <Input
-              id="receiverHouseNumber"
-              placeholder="Full Address"
+              id='receiverHouseNumber'
+              placeholder='Full Address'
               name={"receiverHouseNumber"}
             />
           </div>
@@ -543,117 +543,117 @@ export default function BookingInput({ userAddress, userCords }) {
     return (
       <div>
         {/* Form Heading  */}
-        <div className="mb-6 flex items-center justify-between">
-          <h2 className="text-2xl font-bold">{formSections[currentSection]}</h2>
+        <div className='mb-6 flex items-center justify-between'>
+          <h2 className='text-2xl font-bold'>{formSections[currentSection]}</h2>
         </div>
 
-        <div className="grid phone:grid-cols-1 tablet:grid-cols-2 gap-4 laptop:flex laptop:justify-evenly laptop:items-start">
+        <div className='grid phone:grid-cols-1 tablet:grid-cols-2 gap-4 laptop:flex laptop:justify-evenly laptop:items-start'>
           {/* Vehicle Type */}
           <div>
             <div>
-              <Label htmlFor="vehicleType">Vehicle Type</Label>
+              <Label htmlFor='vehicleType'>Vehicle Type</Label>
               <select
-                name="TypeOfVehicle"
-                id="vehicleType"
-                className="border-gray-900/30 border txt-light-brown text-sm rounded-lg block phone:w-5/6 p-2.5 dark:placeholder-gray-900 dark:text-black drop-shadow-xl focus:outline-none flex justify-center items-center laptop:w-40 laptop:mt-5"
+                name='TypeOfVehicle'
+                id='vehicleType'
+                className='border-gray-900/30 border txt-light-brown text-sm rounded-lg block phone:w-5/6 p-2.5 dark:placeholder-gray-900 dark:text-black drop-shadow-xl focus:outline-none flex justify-center items-center laptop:w-40 laptop:mt-5'
                 value={vehicleType} // Bind to state
                 onChange={(e) => setVehicleType(e.target.value)} // Update state on change
               >
-                <option value="" disabled hidden>
+                <option value='' disabled hidden>
                   Select an Option
                 </option>
-                <option value="Bike">Bike</option>
-                <option value="Scooty">Scooty</option>
-                <option value="Pickup">Pickup</option>
-                <option value="Truck">Truck</option>
+                <option value='Bike'>Bike</option>
+                <option value='Scooty'>Scooty</option>
+                <option value='Pickup'>Pickup</option>
+                <option value='Truck'>Truck</option>
               </select>
             </div>
-            <div className="laptop:block phone:hidden mt-10">
-              <Label htmlFor="productType">Product Type</Label>
+            <div className='laptop:block phone:hidden mt-10'>
+              <Label htmlFor='productType'>Product Type</Label>
               <select
-                name="productType"
-                id="productType"
-                className="border-gray-900/30 border txt-light-brown text-sm rounded-lg block phone:w-5/6 p-2.5 dark:placeholder-gray-900 dark:text-black drop-shadow-xl focus:outline-none flex justify-center items-center laptop:w-40 laptop:mt-5"
-                defaultValue="none"
+                name='productType'
+                id='productType'
+                className='border-gray-900/30 border txt-light-brown text-sm rounded-lg block phone:w-5/6 p-2.5 dark:placeholder-gray-900 dark:text-black drop-shadow-xl focus:outline-none flex justify-center items-center laptop:w-40 laptop:mt-5'
+                defaultValue='none'
               >
-                <option value="none" disabled hidden>
+                <option value='none' disabled hidden>
                   Select an Option
                 </option>
-                <option value="Document">Document</option>
-                <option value="Hardware">Hardware</option>
-                <option value="Books & Stationary">Books & Stationary</option>
-                <option value="Personal Item">Personal Item</option>
-                <option value="Clothes">Clothes</option>
-                <option value="Household Items">Household Items</option>
+                <option value='Document'>Document</option>
+                <option value='Hardware'>Hardware</option>
+                <option value='Books & Stationary'>Books & Stationary</option>
+                <option value='Personal Item'>Personal Item</option>
+                <option value='Clothes'>Clothes</option>
+                <option value='Household Items'>Household Items</option>
               </select>
             </div>
           </div>
 
           {/* Product type */}
-          <div className="laptop:hidden phone:block">
-            <Label htmlFor="productType">Product Type</Label>
+          <div className='laptop:hidden phone:block'>
+            <Label htmlFor='productType'>Product Type</Label>
             <select
-              name="productType"
-              id="productType"
-              className="border-gray-900/30 border txt-light-brown text-sm rounded-lg block w-5/6 p-2.5 dark:placeholder-gray-900 dark:text-black drop-shadow-xl focus:outline-none flex justify-center items-center"
-              defaultValue="none"
+              name='productType'
+              id='productType'
+              className='border-gray-900/30 border txt-light-brown text-sm rounded-lg block w-5/6 p-2.5 dark:placeholder-gray-900 dark:text-black drop-shadow-xl focus:outline-none flex justify-center items-center'
+              defaultValue='none'
             >
-              <option value="none" disabled hidden>
+              <option value='none' disabled hidden>
                 Select an Option
               </option>
-              <option value="Document">Document</option>
-              <option value="Hardware">Hardware</option>
-              <option value="Books & Stationary">Books & Stationary</option>
-              <option value="Personal Item">Personal Item</option>
-              <option value="Clothes">Clothes</option>
-              <option value="Household Items">Household Items</option>
+              <option value='Document'>Document</option>
+              <option value='Hardware'>Hardware</option>
+              <option value='Books & Stationary'>Books & Stationary</option>
+              <option value='Personal Item'>Personal Item</option>
+              <option value='Clothes'>Clothes</option>
+              <option value='Household Items'>Household Items</option>
             </select>
           </div>
 
           {/* weight */}
           <div>
-            <Label htmlFor="productWeight">Product Weight (kg)</Label>
+            <Label htmlFor='productWeight'>Product Weight (kg)</Label>
             <Input
-              id="productWeight"
-              type="number"
-              placeholder="Weight in kg"
+              id='productWeight'
+              type='number'
+              placeholder='Weight in kg'
               name={"productWeight"}
             />
           </div>
 
           {/* Dimensions */}
           <div>
-            <Label htmlFor="productDimensions">Product Dimensions (cm)</Label>
+            <Label htmlFor='productDimensions'>Product Dimensions (cm)</Label>
 
             <Input
-              id="length"
-              type="number"
-              placeholder="Length"
+              id='length'
+              type='number'
+              placeholder='Length'
               name={"length"}
             />
 
             <Input
-              id="width"
-              type="number"
-              placeholder="Width "
+              id='width'
+              type='number'
+              placeholder='Width '
               name={"width"}
             />
 
             <Input
-              id="height"
-              type="number"
-              placeholder="Height"
+              id='height'
+              type='number'
+              placeholder='Height'
               name={"height"}
             />
           </div>
 
           {/* Value */}
           <div>
-            <Label htmlFor="productValue">Product Value (₹) (optional)</Label>
+            <Label htmlFor='productValue'>Product Value (₹) (optional)</Label>
             <Input
-              id="productValue"
-              type="number"
-              placeholder="Value in Rupees"
+              id='productValue'
+              type='number'
+              placeholder='Value in Rupees'
               name={"productValue"}
             />
           </div>
@@ -670,10 +670,10 @@ export default function BookingInput({ userAddress, userCords }) {
       return (
         <div
           onClick={() => setSelectedPartner(index)}
-          className=" w-5/6 flex justify-between px-2 my-2 rounded-lg hover:bg-gray-100 hover:scale-105 hover:drop-shadow-lg transition duration-150 ease-in-out"
+          className=' w-5/6 flex justify-between px-2 my-2 rounded-lg hover:bg-gray-100 hover:scale-105 hover:drop-shadow-lg transition duration-150 ease-in-out'
         >
           {/* Date and time */}
-          <div className="flex items-center">
+          <div className='flex items-center'>
             {selectedPartner === index ? (
               <span>
                 <CircleCheck />
@@ -684,48 +684,48 @@ export default function BookingInput({ userAddress, userCords }) {
               </span>
             )}
 
-            <div className=" mx-4">
+            <div className=' mx-4'>
               <h2>{partner.name}</h2>
-              <h2 className="text-sm text-gray-500">{partner.deliveryTime}</h2>
+              <h2 className='text-sm text-gray-500'>{partner.deliveryTime}</h2>
             </div>
           </div>
 
           {/* Price */}
           <div>
-            <div className="flex">
+            <div className='flex'>
               <span>
                 <IndianRupee width={17} />
               </span>
               <h2>{partner.price}</h2>
             </div>
-            <span className="text-xs text-gray-400">+ GST charges</span>
+            <span className='text-xs text-gray-400'>+ GST charges</span>
           </div>
         </div>
       );
     };
 
     return (
-      <div className="w-[88vw] select-none flex flex-col items-center justify-center">
+      <div className='w-[88vw] select-none flex flex-col items-center justify-center'>
         {/* Title */}
         <div>
-          <h1 className="text-center text-xl font-Fredoka ">
+          <h1 className='text-center text-xl font-Fredoka '>
             Estimate Expense
           </h1>
         </div>
 
-        <div className="h-fit laptop:w-1/2 rounded-lg my-5">
+        <div className='h-fit laptop:w-1/2 rounded-lg my-5'>
           {/* Date and Price */}
-          <div className="flex justify-between px-4 py-2 rounded-lg border-2">
+          <div className='flex justify-between px-4 py-2 rounded-lg border-2'>
             {/* Date and time */}
-            <div className="flex items-center">
+            <div className='flex items-center'>
               <span>
                 <Component />
               </span>
-              <div className="mx-4">
-                <h2 className="text-sm">
+              <div className='mx-4'>
+                <h2 className='text-sm'>
                   {AvailableDeliveryPartner[selectedPartner]?.name}
                 </h2>
-                <h2 className="font-Fredoka">
+                <h2 className='font-Fredoka'>
                   {AvailableDeliveryPartner[selectedPartner]?.deliveryTime}
                 </h2>
               </div>
@@ -733,20 +733,20 @@ export default function BookingInput({ userAddress, userCords }) {
 
             {/* Price */}
             <div>
-              <div className="flex">
+              <div className='flex'>
                 <span>
                   <IndianRupee width={17} />
                 </span>
                 <h2>{AvailableDeliveryPartner[selectedPartner]?.price}</h2>
               </div>
-              <span className="text-xs text-gray-400">+ GST charges</span>
+              <span className='text-xs text-gray-400'>+ GST charges</span>
             </div>
           </div>
 
           {/* Delivery Partner */}
           <div>
-            <div className="mt-5 mx-5 w-fit h-7 flex justify-center items-center border-b-2">
-              <h1 className="mr-5">All available Partners</h1>
+            <div className='mt-5 mx-5 w-fit h-7 flex justify-center items-center border-b-2'>
+              <h1 className='mr-5'>All available Partners</h1>
             </div>
 
             {/* Container with ref to manipulate height */}
@@ -754,10 +754,10 @@ export default function BookingInput({ userAddress, userCords }) {
               ref={partnersRef} // Reference to the container
               initial={{ height: 0 }}
               animate={{ height: "auto" }} // Let Framer Motion handle the animation
-              className="overflow-hidden"
+              className='overflow-hidden'
               style={{ height: 0 }} // Default height set to 0 (hidden)
             >
-              <div className="flex flex-col items-center">
+              <div className='flex flex-col items-center'>
                 {AvailableDeliveryPartner.map((partner, index) => (
                   <DeliveryPartner
                     key={index}
@@ -775,38 +775,38 @@ export default function BookingInput({ userAddress, userCords }) {
 
   function ReviewPage() {
     return (
-      <div className="laptop:flex phone:flex phone:flex-col laptop:flex-row">
-        <div className="mb-6 flex items-center justify-between">
-          <h2 className="text-2xl font-bold">{formSections[currentSection]}</h2>
+      <div className='laptop:flex phone:flex phone:flex-col laptop:flex-row'>
+        <div className='mb-6 flex items-center justify-between'>
+          <h2 className='text-2xl font-bold'>{formSections[currentSection]}</h2>
         </div>
-        <div className="flex laptop:flex-row phone:flex-col">
-          <section className="Shipment-details flex  border-b-2 pb-2 flex-col mr-40 ">
+        <div className='flex laptop:flex-row phone:flex-col'>
+          <section className='Shipment-details flex  border-b-2 pb-2 flex-col mr-40 '>
             {/* Name, number and address */}
-            <div className="Sender  w-full h-fit p-4 flex  justify-between border-r-2  ">
-              <div className=" w-[90%] h-fit ">
-                <div className="flex gap-2">
-                  <h2 className="text-lg font-serif">{sender?.senderName}</h2>
-                  <span className="text-gray-400">{sender?.senderNumber}</span>
+            <div className='Sender  w-full h-fit p-4 flex  justify-between border-r-2  '>
+              <div className=' w-[90%] h-fit '>
+                <div className='flex gap-2'>
+                  <h2 className='text-lg font-serif'>{sender?.senderName}</h2>
+                  <span className='text-gray-400'>{sender?.senderNumber}</span>
                 </div>
                 <div>
-                  <span className="text-sm text-gray-400">
+                  <span className='text-sm text-gray-400'>
                     House Number:{" "}
                     {sender.senderHouseNumber + ", " + sender.senderAddress}
                   </span>
                 </div>
               </div>
             </div>
-            <div className="Reciever  w-full h-fit p-4 flex justify-between  ">
+            <div className='Reciever  w-full h-fit p-4 flex justify-between  '>
               {/* Name, number and address */}
-              <div className=" w-[90%] h-fit ">
-                <div className="flex gap-2 flex-row">
+              <div className=' w-[90%] h-fit '>
+                <div className='flex gap-2 flex-row'>
                   <h2>{receiver?.receiverName}</h2>
-                  <span className="text-gray-400">
+                  <span className='text-gray-400'>
                     {receiver?.receiverAddress}
                   </span>
                 </div>
                 <div>
-                  <span className="text-sm text-gray-400">
+                  <span className='text-sm text-gray-400'>
                     House Number:{" "}
                     {receiver.receiverHouseNumber +
                       ", " +
@@ -822,24 +822,24 @@ export default function BookingInput({ userAddress, userCords }) {
               </div> */}
             </div>
           </section>
-          <section className="Item-Details flex justify-between mt-5 border-b-2 pb-2 mr-40">
+          <section className='Item-Details flex justify-between mt-5 border-b-2 pb-2 mr-40'>
             {/* Details */}
-            <div className="flex flex-col">
-              <div className="flex flex-col gap-2">
-                <h3 className="text-lg ">
+            <div className='flex flex-col'>
+              <div className='flex flex-col gap-2'>
+                <h3 className='text-lg '>
                   Type of Parcel: {itemDetails.productType}
                 </h3>
                 <h3>weight: {itemDetails.productWeight} kg</h3>
               </div>
-              <div className="flex flex-col gap-2">
-                <h3 className="text-lg ">
+              <div className='flex flex-col gap-2'>
+                <h3 className='text-lg '>
                   volume:{" "}
-                  <span className="font-exo font-bold">
+                  <span className='font-exo font-bold'>
                     {itemDetails.length *
                       itemDetails.width *
                       itemDetails.height}{" "}
                   </span>
-                  <span className="text-sm font-Exo"> cubic cm </span>
+                  <span className='text-sm font-Exo'> cubic cm </span>
                 </h3>
                 <h3>worth: {itemDetails.productValue}</h3>
               </div>
@@ -851,18 +851,18 @@ export default function BookingInput({ userAddress, userCords }) {
               </button>
             </div> */}
           </section>
-          <section className="Date-and-payment-details  mt-5 border-b-2 pb-2">
+          <section className='Date-and-payment-details  mt-5 border-b-2 pb-2'>
             <h2>Final checkout</h2>
             <div>
               {/* Shipment date, partner and price */}
-              <div className="flex justify-between items-center px-4 py-2 rounded-lg ">
+              <div className='flex justify-between items-center px-4 py-2 rounded-lg '>
                 {/* Date and time */}
-                <div className="flex items-center">
-                  <div className="mx-4">
-                    <h2 className="text-sm">
+                <div className='flex items-center'>
+                  <div className='mx-4'>
+                    <h2 className='text-sm'>
                       {AvailableDeliveryPartner[selectedPartner]?.name}
                     </h2>
-                    <h2 className="font-bold font-serif">
+                    <h2 className='font-bold font-serif'>
                       {AvailableDeliveryPartner[selectedPartner]?.deliveryTime}
                     </h2>
                   </div>
@@ -870,7 +870,7 @@ export default function BookingInput({ userAddress, userCords }) {
 
                 {/* Price */}
                 <div>
-                  <div className="flex">
+                  <div className='flex'>
                     <span>
                       <IndianRupee width={17} />
                     </span>
@@ -879,12 +879,12 @@ export default function BookingInput({ userAddress, userCords }) {
                 </div>
               </div>
               {/* External charges */}
-              <div className="px-7">
+              <div className='px-7'>
                 {/* CGST */}
-                <div className="flex justify-between">
+                <div className='flex justify-between'>
                   <h4>CGST @ 9%</h4>
                   <div>
-                    <div className="flex">
+                    <div className='flex'>
                       <span>
                         <IndianRupee width={17} />
                       </span>
@@ -894,10 +894,10 @@ export default function BookingInput({ userAddress, userCords }) {
                 </div>
 
                 {/* SGST/UTGST */}
-                <div className="flex justify-between">
+                <div className='flex justify-between'>
                   <h4>SGST/UTGST @ 9%</h4>
                   <div>
-                    <div className="flex">
+                    <div className='flex'>
                       <span>
                         <IndianRupee width={17} />
                       </span>
@@ -909,14 +909,14 @@ export default function BookingInput({ userAddress, userCords }) {
             </div>
 
             {/* Total */}
-            <div className="flex justify-between px-7 mt-2">
-              <span className="text-lg font-bold font-serif">Total</span>
+            <div className='flex justify-between px-7 mt-2'>
+              <span className='text-lg font-bold font-serif'>Total</span>
               <div>
-                <div className="flex">
+                <div className='flex'>
                   <span>
                     <IndianRupee width={17} />
                   </span>
-                  <h2 className="text-lg font-bold font-serif">130</h2>
+                  <h2 className='text-lg font-bold font-serif'>130</h2>
                 </div>
               </div>
             </div>
@@ -944,21 +944,21 @@ export default function BookingInput({ userAddress, userCords }) {
   }, [userAddress, userCords, currentSection]);
 
   return (
-    <div id="Booking_Input" className=" w-full phone:h-fit   ">
-      <div className="absolute h-[40vh] overflow-hidden phone:hidden laptop:block">
-        <img src={BackgroundImage} className=" w-full " />
+    <div id='Booking_Input' className=' w-full phone:h-fit   '>
+      <div className='absolute h-[40vh] overflow-hidden phone:hidden laptop:block'>
+        <img src={BackgroundImage} className=' w-full ' />
       </div>
-      <div className="laptop:h-80 relative w-full z-40">
-        <div className=" phone:max-w-[90vw] laptop:max-w-[80vw] laptop:absolute bottom-20 laptop:mx-40 phone:mx-auto p-6 backdrop-blur-2xl rounded-lg shadow-lg phone:h-fit phone:top-4 phone:mb-10 laptop:-top-40 w-full">
-          <form ref={formRef} action="">
-            <AnimatePresence custom={direction} mode="wait">
+      <div className='laptop:h-80 relative w-full z-40'>
+        <div className=' phone:max-w-[90vw] laptop:max-w-[80vw] laptop:absolute bottom-20 laptop:mx-40 phone:mx-auto p-6 backdrop-blur-2xl rounded-lg shadow-lg phone:h-fit phone:top-4 phone:mb-10 laptop:-top-40 w-full'>
+          <form ref={formRef} action=''>
+            <AnimatePresence custom={direction} mode='wait'>
               <motion.div
                 key={currentSection}
                 custom={direction}
                 variants={variants}
-                initial="enter"
-                animate="center"
-                exit="exit"
+                initial='enter'
+                animate='center'
+                exit='exit'
                 transition={{ type: "tween", duration: 0.5 }}
               >
                 {currentSection === 0 && <SenderDetails />}
@@ -970,7 +970,7 @@ export default function BookingInput({ userAddress, userCords }) {
           </form>
 
           {/* previous and next btn  */}
-          <div className="mt-6 flex justify-between">
+          <div className='mt-6 flex justify-between'>
             {currentSection === 3 ? (
               <ButtonWrapper
                 onClick={async (e) => {
@@ -980,9 +980,9 @@ export default function BookingInput({ userAddress, userCords }) {
                 }}
                 // disabled={currentSection === formSections.length - 1}
               >
-                <div className="flex justify-center items-center">
+                <div className='flex justify-center items-center'>
                   Book Shipment
-                  <ChevronRight className="w-4 h-4 ml-2" />
+                  <ChevronRight className='w-4 h-4 ml-2' />
                 </div>
               </ButtonWrapper>
             ) : (
@@ -992,9 +992,9 @@ export default function BookingInput({ userAddress, userCords }) {
                 }}
                 // disabled={currentSection === formSections.length - 1}
               >
-                <div className="flex justify-center items-center">
+                <div className='flex justify-center items-center'>
                   save & Next
-                  <ChevronRight className="w-4 h-4 ml-2" />
+                  <ChevronRight className='w-4 h-4 ml-2' />
                 </div>
               </ButtonWrapper>
             )}

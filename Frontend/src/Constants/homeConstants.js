@@ -19,7 +19,7 @@ import Vector5 from "../assets/Home/Vector5.png";
 
 export const VehicleData = [
   {
-    name: "Book Parcel",
+    name: "Parcel Delivery",
     icon: Bike,
   },
   {
@@ -56,13 +56,24 @@ export const OurServices = [
   //   name: "API Integrations",
   //   description: "Automate your deliveries by integration our APIs",
   // },
+  // {
+  //   name: "2 Wheelers",
+  //   description: "Instant delivery for up to 20 kgs.",
+  //   image: Vector1,
+  // },
   {
-    name: "2 Wheelers",
-    description: "Instant delivery for up to 20 kgs.",
-    image: Vector1,
+    name: "E-Comm. Services",
+    description: "We also offer Shopping Platform",
+    image: Vector4,
   },
   {
-    name: "Mini Trucks",
+    name: "Parcel Delivery",
+    description:
+      "Deliver your parcel any where you want with our smooth transportation experience ",
+    image: Vector4,
+  },
+  {
+    name: "Book Mini Trucks",
     description: "Hassle-free goods delivery up to 2500 kgs.",
     image: Vector2,
   },
@@ -71,16 +82,12 @@ export const OurServices = [
     description: "Integration of our APIs is available to developers",
     image: Vector3,
   },
-  {
-    name: "E Comm. Services",
-    description: "We also offer Shopping Platform",
-    image: Vector4,
-  },
-  {
-    name: "Insurance Services",
-    description: "Need to insure your goods for transportation",
-    image: Vector5,
-  },
+
+  // {
+  //   name: "Insurance Services",
+  //   description: "Need to insure your goods for transportation",
+  //   image: Vector5,
+  // },
   // {
   //   name: "Riders Kart for Enterprise",
   //   description: "Streamlining logistics to drive business growth",

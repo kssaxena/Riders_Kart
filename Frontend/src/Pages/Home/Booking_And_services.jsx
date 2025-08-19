@@ -51,7 +51,7 @@ const Booking_And_services = () => {
         style={{ width: "80vw", left: "15vw" }}
       >
         <div
-          className="flex gap-10 mt-10"
+          className="flex gap-20 mt-10"
           style={{
             transform: `translateX(-${offset}px)`,
             transition: "transform 0.5s ease-in-out",
@@ -124,7 +124,7 @@ const Booking_And_services = () => {
     return (
       <div className="flex flex-col  justify-center items-center h-fit bg-transparent laptop:hidden ">
         <h1 className="flex flex-col justify-center items-center gap-2">
-          <span className="text-4xl font-semibold">Rider's Kart</span>
+          <span className="text-4xl font-semibold ">Rider's Kart</span>
           <span>Most favorable application for sending Parcels </span>
         </h1>
         <div className="w-[90vw] flex flex-wrap justify-evenly tablet:w-fit overflow-hidden items-center   ">
@@ -141,9 +141,7 @@ const Booking_And_services = () => {
                 className="hover:scale-105 transition duration-200 ease-in-out rounded-lg"
               />
             </div>
-            <h3 className="name text-center w-24 text-sm mt-2 ">
-              E Commerce Services
-            </h3>
+            <h3 className="name text-center w-24 text-sm mt-2 ">Shop now</h3>
           </a>
           {VehicleData.map((field, index) => (
             <Vehicle key={index} field={field} />
@@ -298,7 +296,7 @@ const Booking_And_services = () => {
                       />
                     </div>
                     <h3 className="name text-center w-24 text-sm mt-2 ">
-                      E Commerce Services
+                      Shop now
                     </h3>
                   </a>
                   {VehicleData.map((field, index) => (
@@ -336,7 +334,7 @@ const Booking_And_services = () => {
         {/* <div class="absolute inset-0 -z-10 h-full w-full bg-white bg-[linear-gradient(to_right,#f0f0f0_1px,transparent_1px),linear-gradient(to_bottom,#f0f0f0_1px,transparent_1px)] bg-[size:6rem_4rem]"></div> */}
         {/* Title */}
         <div className="Title pt-10  flex flex-col justify-center items-center">
-          <span className="  h-14 font-semibold text-[3rem]  heading-text-gray">
+          <span className="  h-14 font-semibold font-Fredoka text-[3rem]  heading-text-gray">
             Our Services
           </span>
         </div>
@@ -357,7 +355,10 @@ const Booking_And_services = () => {
         </div>
 
         {/* All services */}
-        <div className="All-Services relative overflow-hidden phone:hidden tablet:flex flex justify-center items-center ">
+        <div
+          className="All-Services relative overflow-hidden phone:hidden tablet:flex flex justify-center items-center "
+          id="services"
+        >
           <div className="w-[90%] flex justify-center items-center pr-96">
             <OurServicesSlider />
           </div>
