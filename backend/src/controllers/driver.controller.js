@@ -9,6 +9,7 @@ import jwt from "jsonwebtoken";
 import { NotificationStructure } from "../utils/NotificationClass.js";
 import { io } from "../app.js";
 import { FindNearbyDrivers } from "./Order.controller.js";
+import { sendOtpSMS } from "../utils/sms.js";
 
 const generateAccessAndRefreshTokens = async (userId) => {
   try {
@@ -143,6 +144,11 @@ const RegisterDriver = asyncHandler(async (req, res) => {
   await newDriver.save();
 
   const createdDriver = await DeliveryPartner.findById(newDriver._id);
+
+  const smsId = await sendOtpSMS(phone, otp, name);
+  if (!smsId) {
+    throw new ApiError(500, "Failed to send OTP via SMS");
+  }
 
   if (!createdDriver)
     throw new ApiError(
@@ -439,7 +445,7 @@ const ToggleActiveDriver = asyncHandler(async (req, res) => {
   if (!driver) throw new ApiError(404, "Driver not found");
 
   if (driver.verificationStatus === DriverVerificationStatus[2]) {
-    console.log("Driver Active status: ",driver.isActive); 
+    console.log("Driver Active status: ", driver.isActive);
     driver.isActive = !driver.isActive;
     await driver.save();
 

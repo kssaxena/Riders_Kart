@@ -270,7 +270,7 @@ const Header = () => {
                   navigate("/all-orders");
                 }}
               >
-                all Orders
+                All Orders
               </ButtonWrapper>
               {/* <Link to={`/user-profile/(user?.[0]?._id)`}>Profile</Link>; */}
               <ButtonWrapper
