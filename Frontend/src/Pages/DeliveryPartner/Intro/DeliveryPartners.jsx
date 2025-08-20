@@ -129,15 +129,45 @@ function DeliveryPartners() {
   return (
     <div className="Delivery-Partners pl-4 pr-4 bg-color-standard">
       <div>
-        <div className="img-container w-full ">
+        <section className="Rider's Kart-Life-Easy bg-white border-b-8 text-justify text-opacity-75">
+          <div className="Title">
+            <h2 className="text-center font-medium tracking-wider uppercase pt-7 text-3xl heading-text-gray">
+              Rider's Kart Delivery Partner
+            </h2>
+          </div>
+
+          <div className="laptop:flex items-center justify-center gap-10">
+            <img src={Banner} alt="" className=" laptop:h-[60vh]" />
+            <div className="description-button laptop:w-[40vw] flex flex-col gap-5 phone:mx-4 ">
+              <h2 className="font-semibold text-lg subtitle-text-gray">
+                Join Rider's Kart as a Delivery Partner – Drive Your Future
+                Forward!
+              </h2>
+              <p className="text-sm font-light para-text-gray">
+                Become a part of Rider's Kart, a fast-growing logistics and
+                delivery platform that connects individuals and businesses with
+                reliable delivery partners. As a delivery partner, you get the
+                flexibility to choose your working hours, earn competitive
+                payouts, and be your own boss. Whether you own a bike,
+                mini-truck, or van, there's a place for you in our network. Join
+                us today and start earning on your terms!
+              </p>
+              <div className="mb-4">
+                <ButtonWrapper onClick={() => navigate("/register-driver")}>
+                  Register With us
+                </ButtonWrapper>
+              </div>
+            </div>
+          </div>
+        </section>
+        {/* <div className=" w-full">
           <img
             src={Banner}
             alt=""
             className="laptop:h-[100vh] h-[40vh] w-full "
             las
           />
-          <h1 className=" "></h1>
-        </div>
+        </div> */}
         {/* <div>
           <nav className="py-10 w-full items-center justify-center flex flex-col gap-5">
             <h1 className="font-Fredoka flex flex-col justify-center items-center">

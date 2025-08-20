@@ -2,27 +2,32 @@ import React, { useEffect, useState } from "react";
 import { FetchData } from "../../utility/fetchFromAPI";
 import { Link, useLocation, useNavigate } from "react-router-dom";
 import Loader from "../../Components/Loader";
+import withLoadingUI from "../../Components/Loading";
 
-const AllOrders = () => {
+const AllOrders = ({ startLoading, stopLoading }) => {
   const [allOrders, setAllOrders] = useState();
 
   // Functions
 
   useEffect(() => {
-    async function getAllOrders() {
-      const Orders = await FetchData("order/get-all-order", "get");
-      //console.log(Orders?.data?.data?.allOrders);
-      setAllOrders(Orders?.data?.data?.allOrders);
-      return Orders;
-    }
+    const getAllOrders = async () => {
+      try {
+        startLoading();
+        const Orders = await FetchData("order/get-all-order", "get");
+        //console.log(Orders?.data?.data?.allOrders);
+        setAllOrders(Orders?.data?.data?.allOrders);
+      } catch (error) {
+        console.log(error);
+      } finally {
+        stopLoading();
+      }
+    };
 
     getAllOrders();
   }, []);
 
-  return !allOrders ? (
-    <Loader />
-  ) : (
-    <div className="pt-10 bg-color-standard">
+  return (
+    <div className="pt-10 bg-color-standard h-screen">
       <h1 className="text-center text-4xl font-Fredoka">All Orders</h1>
 
       {allOrders && allOrders.length > 0 ? (
@@ -66,4 +71,4 @@ const AllOrders = () => {
   );
 };
 
-export default AllOrders;
+export default withLoadingUI(AllOrders);

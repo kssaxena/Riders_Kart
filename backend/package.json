@@ -30,7 +30,7 @@
     "express-rate-limit": "^7.5.0",
     "imagekit": "^5.2.0",
     "jsonwebtoken": "^9.0.2",
-    "mongodb": "^6.15.0",
+    "mongodb": "^6.18.0",
     "mongoose": "^8.1.0",
     "mongoose-aggregate-paginate-v2": "^1.0.7",
     "multer": "^1.4.5-lts.1",

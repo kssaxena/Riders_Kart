@@ -7,6 +7,7 @@ import { io } from "../app.js";
 import SendMail from "../utils/Nodemailer.js";
 import { ApiKey } from "../models/api-key.model.js";
 import { generateApiKey } from "../utils/apiKeyGenerator.js";
+import { sendOtpSMS } from "../utils/sms.js";
 
 const generateAccessAndRefreshTokens = async (userId) => {
   try {
@@ -73,6 +74,15 @@ const RegisterUser = asyncHandler(async (req, res) => {
     If not registered from your end, kindly reply <a href="https://honeydew-mule-369122.hostingersite.com">Delete my account</a> on this email.
    </h3> <b/>`
   );
+
+  const smsId = await sendOtpSMS(
+    number,
+    "Welcome to Rider's Kart. We're excited to have you onboard. Get ready for fast, reliable deliveries at your fingertips.",
+    name
+  );
+  if (!smsId) {
+    throw new ApiError(500, "Failed to send OTP via SMS");
+  }
 
   const options = {
     httpOnly: true,

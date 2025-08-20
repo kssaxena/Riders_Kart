@@ -9,7 +9,8 @@ import { addUser, clearUser } from "../../../utility/Slice/UserInfoSlice";
 import { alertError, alertSuccess } from "../../../utility/Alert";
 import { parseErrorMessage } from "../../../utility/ErrorMessageParser";
 import Input from "../../../Components/Input";
-function RegisterDriver() {
+import withLoadingUI from "../../../Components/Loading";
+function RegisterDriver({ startLoading, stopLoading }) {
   // variables----------------------------------------------------------------
   const FormRef = useRef();
   const navigate = useNavigate();
@@ -106,6 +107,7 @@ function RegisterDriver() {
     }
 
     try {
+      startLoading();
       const response = await FetchData("driver/register", "post", formData);
 
       console.log(response);
@@ -138,12 +140,14 @@ function RegisterDriver() {
       navigate("/");
     } catch (error) {
       console.log(error);
-      // alertError(parseErrorMessage(error.response.data));
+      alertError(parseErrorMessage(error.response.data));
+    } finally {
+      stopLoading();
     }
   };
 
   return (
-    <div className="max-w-[80vw] mx-auto my-10  rounded-lg shadow-2xl shadow-white-300 p-8 bg-[#949597]">
+    <div className="max-w-[80vw] mx-auto my-10  rounded-lg shadow-2xl shadow-white-300 p-8 bg-neutral-200">
       <h1 className="text-3xl font-bold mb-6 heading-text-gray">
         Personal Details <br />
         <span className="text-red-600 font-thin text-sm">
@@ -289,7 +293,7 @@ function RegisterDriver() {
             <Label>Select Vehicle Type:</Label>
             <select
               name="vehicleType"
-              className=" border-l-2 border-b-2 backdrop-blur-xl border-gray-900/30 txt-light-brown text-sm rounded-lg block w-4/5 mb-4 p-2.5 dark:placeholder-white dark:text-black drop-shadow-xl focus:outline-none "
+              className=" border-l-2 border-b-2 backdrop-blur-xl border-gray-900/30 txt-light-brown text-sm rounded-lg block laptop:w-4/5 w-full mb-4 p-2.5 dark:placeholder-white dark:text-black drop-shadow-xl focus:outline-none "
             >
               <option value="bike">Bike</option>
               <option value="scooty">Scooty</option>
@@ -308,7 +312,7 @@ function RegisterDriver() {
             <textarea
               type="text"
               name="vehicleDescription"
-              className=" border-l-2 border-b-2 backdrop-blur-xl border-gray-900/30 txt-light-brown text-sm rounded-lg block w-80 mb-4 p-2.5 dark:placeholder-white dark:text-black drop-shadow-xl focus:outline-none "
+              className=" border-l-2 border-b-2 backdrop-blur-xl border-gray-900/30 txt-light-brown text-sm rounded-lg block laptop:w-80 w-full mb-4 p-2.5 dark:placeholder-white dark:text-black drop-shadow-xl focus:outline-none "
               required
             />
           </div>
@@ -414,4 +418,4 @@ function RegisterDriver() {
   );
 }
 
-export default RegisterDriver;
+export default withLoadingUI(RegisterDriver);

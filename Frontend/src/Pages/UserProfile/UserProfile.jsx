@@ -9,8 +9,9 @@ import { FetchData } from "../../utility/fetchFromAPI";
 import { useDispatch, useSelector } from "react-redux";
 import { formatDateTime } from "../../utility/FormatDateTime";
 import { alertSuccess } from "../../utility/Alert";
+import LoadingUI from "../../Components/Loading";
 
-const UserProfile = () => {
+const UserProfile = ({ startLoading, stopLoading }) => {
   const user = useSelector((store) => store.UserInfo.user);
   const Dispatch = useDispatch();
   // console.log(user);
@@ -22,20 +23,31 @@ const UserProfile = () => {
   const [apiKeys, setApiKeys] = useState([]);
 
   useEffect(() => {
-    async function fetchUserData(userId) {
-      const User = await FetchData(`user/get-user-details/${userId}`, "get");
-      // console.log(User);
-      setCurrentUser(User?.data?.data);
-      return User;
-    }
+    const fetchUserData = async (userId) => {
+      try {
+        startLoading();
+        const User = await FetchData(`user/get-user-details/${userId}`, "get");
+        // console.log(User);
+        setCurrentUser(User?.data?.data);
+        return User;
+      } catch {
+        console.error("Error");
+      } finally {
+        stopLoading();
+      }
+    };
+    // async function fetchUserData() {}
 
     const fetchAPIKeys = async () => {
       try {
+        startLoading();
         const response = await FetchData("user/api-key/:apiKeyId", "get");
         console.log(response);
         setApiKeys(response?.data?.data);
       } catch (error) {
         console.error("Error submitting form:");
+      } finally {
+        stopLoading();
       }
     };
 
@@ -46,11 +58,14 @@ const UserProfile = () => {
 
   const handleAPIDelete = async (apiKeyId) => {
     try {
+      startLoading();
       const response = await FetchData(`user/api-key/${apiKeyId}`, "delete");
       // console.log(response);
       alertSuccess("API key deleted successfully");
     } catch (error) {
       console.error("Error deleting API key:", error);
+    } finally {
+      stopLoading();
     }
   };
 
@@ -67,9 +82,7 @@ const UserProfile = () => {
     Navigate("/wallet-page", { replace: true });
   };
 
-  return !CurrentUser ? (
-    <Loader />
-  ) : (
+  return (
     <div className="flex w-full justify-center items-start h-screen gap-10 py-5">
       <section className="userDetails flex flex-col justify-between gap-5 ">
         <h1 className="flex items-center text-blue-600 font-bold text-xl ">
@@ -89,19 +102,15 @@ const UserProfile = () => {
           <div className="p-4 rounded-lg">
             <div className="grid grid-cols-3 gap-4 text-lg">
               <h2 className="font-medium">Name:</h2>
-              <span className="col-span-2 text-2xl font-semibold uppercase">
+              <span className="col-span-2 text-2xl uppercase">
                 {CurrentUser?.name}
               </span>
 
               <h2 className="font-medium">Email:</h2>
-              <span className="col-span-2 text-2xl font-semibold">
-                {CurrentUser?.email}
-              </span>
+              <span className="col-span-2 text-2xl">{CurrentUser?.email}</span>
 
               <h2 className="font-medium">Phone:</h2>
-              <span className="col-span-2 text-2xl font-semibold">
-                {CurrentUser?.number}
-              </span>
+              <span className="col-span-2 text-2xl">{CurrentUser?.number}</span>
             </div>
           </div>
         </Card>
@@ -113,7 +122,7 @@ const UserProfile = () => {
         <Card
           className={`flex flex-col justify-start items-center overflow-y-scroll h-96`}
         >
-          <h1 className="flex flex-col items-center text-blue-600 font-bold text-xl mb-5 ">
+          <h1 className="flex flex-col items-center text-xl mb-5 ">
             List of all orders
             <span className="text-green-600">
               Total Order: {filteredOrders?.length || 0}
@@ -183,13 +192,7 @@ const UserProfile = () => {
         </Card>
       </section>
     </div>
-
-    // {!CurrentUser ? (
-    //     <div className="w-screen flex justify-center items-center">
-    //       <Lottie width={50} height={50} animationData={Loading} />
-    //     </div>
-    //   ) : }
   );
 };
 
-export default UserProfile;
+export default LoadingUI(UserProfile);

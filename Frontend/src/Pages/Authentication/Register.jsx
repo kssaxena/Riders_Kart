@@ -69,7 +69,7 @@ const Register = ({ startLoading, stopLoading }) => {
       alertSuccess(response.data.message);
     } catch (error) {
       console.log(error);
-      // alertError(parseErrorMessage(error.response.data));
+      alertError(parseErrorMessage(error.response.data));
     } finally {
       stopLoading();
     }

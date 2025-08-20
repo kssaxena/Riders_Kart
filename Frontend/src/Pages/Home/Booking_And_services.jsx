@@ -6,8 +6,9 @@ import { Link } from "react-router-dom";
 import HomeBackGround from "../../assets/Home/HomeBackground.jpg";
 import ButtonWrapper from "../../Components/Buttons";
 import Ecom from "../../assets/Home/EcomImage.png";
+import LoadingUI from "../../Components/Loading";
 
-const Booking_And_services = () => {
+const Booking_And_services = ({ startLoading, stopLoading }) => {
   // Constants
   const [current, setCurrent] = useState(0);
 
@@ -368,4 +369,4 @@ const Booking_And_services = () => {
   );
 };
 
-export default Booking_And_services;
+export default LoadingUI(Booking_And_services);
