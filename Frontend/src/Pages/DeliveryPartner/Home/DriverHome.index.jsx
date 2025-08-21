@@ -11,9 +11,10 @@ import { addUser, clearUser } from "../../../utility/Slice/UserInfoSlice";
 import { parseErrorMessage } from "../../../utility/ErrorMessageParser";
 import io from "socket.io-client";
 import { addAllAppointment } from "../../../utility/Slice/AllAppointmentsSlice";
+import withLoadingUI from "../../../Components/Loading";
 
 const socket = io(process.env.DomainUrl);
-export default function DeliveryPartnerHome() {
+function DeliveryPartnerHome({ startLoading, stopLoading }) {
   const Navigate = useNavigate();
   const Dispatch = useDispatch();
   const [notifications, setNotifications] = useState([]);
@@ -24,7 +25,7 @@ export default function DeliveryPartnerHome() {
   const [isDropdownOpen, setIsDropdownOpen] = useState(false);
   const [selectedOption, setSelectedOption] = useState(null);
   const user = useSelector((store) => store.UserInfo.user);
-  // console.log(user);
+  console.log(user);
   const [CurrentPartner, setPartner] = useState(null);
 
   const options = [
@@ -541,3 +542,5 @@ export default function DeliveryPartnerHome() {
     </div>
   );
 }
+
+export default withLoadingUI(DeliveryPartnerHome);
