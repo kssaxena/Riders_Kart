@@ -67,44 +67,44 @@ function RegisterDriver({ startLoading, stopLoading }) {
       console.log(key, value);
     }
 
-    // // Validate phone number (must be 10 digits)
-    // const phone = formData.get("phone");
-    // const phoneRegex = /^[6-9]\d{9}$/;
-    // if (!phoneRegex.test(phone)) {
-    //   alert("Please enter a valid phone number");
-    //   return;
-    // }
+    // Validate phone number (must be 10 digits)
+    const phone = formData.get("phone");
+    const phoneRegex = /^[6-9]\d{9}$/;
+    if (!phoneRegex.test(phone)) {
+      alert("Please enter a valid phone number");
+      return;
+    }
 
-    // // Validate Aadhar number (12 digits)
-    // const aadharNumber = formData.get("aadharNumber");
-    // const aadharRegex = /^\d{12}$/;
-    // if (!aadharRegex.test(aadharNumber)) {
-    //   alert("Please enter a valid aadhar number");
-    //   return;
-    // }
+    // Validate Aadhar number (12 digits)
+    const aadharNumber = formData.get("aadharNumber");
+    const aadharRegex = /^\d{12}$/;
+    if (!aadharRegex.test(aadharNumber)) {
+      alert("Please enter a valid aadhar number");
+      return;
+    }
 
-    // // Validate PAN number (10 characters, alphanumeric, specific format)
-    // const panNumber = formData.get("panNumber");
-    // const panRegex = /^[A-Z]{5}[0-9]{4}[A-Z]{1}$/;
-    // if (!panRegex.test(panNumber)) {
-    //   alert("Please enter a valid Pan number");
-    //   return;
-    // }
+    // Validate PAN number (10 characters, alphanumeric, specific format)
+    const panNumber = formData.get("panNumber");
+    const panRegex = /^[A-Z]{5}[0-9]{4}[A-Z]{1}$/;
+    if (!panRegex.test(panNumber)) {
+      alert("Please enter a valid Pan number");
+      return;
+    }
 
-    // // Validate Driving License number (adjust based on local rules, typically alphanumeric)
-    // const licenseNumber = formData.get("licenseNumber");
-    // const dlRegex = /^[A-Z]{2}\d{13}$/; // Adjust this regex as per the regional format
-    // if (!dlRegex.test(licenseNumber)) {
-    //   alert("Please enter a valid Driving License number");
-    //   return;
-    // }
+    // Validate Driving License number (adjust based on local rules, typically alphanumeric)
+    const licenseNumber = formData.get("licenseNumber");
+    const dlRegex = /^[A-Z]{2}\d{13}$/; // Adjust this regex as per the regional format
+    if (!dlRegex.test(licenseNumber)) {
+      alert("Please enter a valid Driving License number");
+      return;
+    }
 
-    // const plateNumber = formData.get("plateNumber");
-    // const plateRegex = /^[A-Z]{2}\d{2}[A-Z]{2}\d{4}$/;
-    // if (!plateRegex.test(plateNumber)) {
-    //   alert("Please enter a valid Plate number");
-    //   return;
-    // }
+    const plateNumber = formData.get("plateNumber");
+    const plateRegex = /^[A-Z]{2}\d{2}[A-Z]{2}\d{4}$/;
+    if (!plateRegex.test(plateNumber)) {
+      alert("Please enter a valid Plate number");
+      return;
+    }
 
     try {
       startLoading();

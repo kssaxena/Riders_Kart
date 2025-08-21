@@ -77,29 +77,29 @@ const RegisterDriver = asyncHandler(async (req, res) => {
   )
     throw new ApiError(400, "Required fields are missing.");
 
-  // // Validate phone number (must be 10 digits)
-  // const phoneRegex = /^[6-9]\d{9}$/;
-  // if (!phoneRegex.test(phone)) {
-  //   throw new ApiError(401, "Invalid phone number format.");
-  // }
+  // Validate phone number (must be 10 digits)
+  const phoneRegex = /^[6-9]\d{9}$/;
+  if (!phoneRegex.test(phone)) {
+    throw new ApiError(401, "Invalid phone number format.");
+  }
 
-  // // Validate Aadhar number (12 digits)
-  // const aadharRegex = /^\d{12}$/;
-  // if (!aadharRegex.test(aadharNumber)) {
-  //   throw new ApiError(401, "Invalid Aadhar number format.");
-  // }
+  // Validate Aadhar number (12 digits)
+  const aadharRegex = /^\d{12}$/;
+  if (!aadharRegex.test(aadharNumber)) {
+    throw new ApiError(401, "Invalid Aadhar number format.");
+  }
 
-  // // Validate PAN number (10 characters, alphanumeric, specific format)
-  // const panRegex = /^[A-Z]{5}[0-9]{4}[A-Z]{1}$/;
-  // if (!panRegex.test(panNumber)) {
-  //   throw new ApiError(401, "Invalid PAN number format.");
-  // }
+  // Validate PAN number (10 characters, alphanumeric, specific format)
+  const panRegex = /^[A-Z]{5}[0-9]{4}[A-Z]{1}$/;
+  if (!panRegex.test(panNumber)) {
+    throw new ApiError(401, "Invalid PAN number format.");
+  }
 
-  // // Validate Driving License number (adjust based on local rules, typically alphanumeric)
-  // const dlRegex = /^[A-Z]{2}\d{13}$/; // Adjust this regex as per the regional format
-  // if (!dlRegex.test(licenseNumber)) {
-  //   throw new ApiError(401, "Invalid Driving License number format.");
-  // }
+  // Validate Driving License number (adjust based on local rules, typically alphanumeric)
+  const dlRegex = /^[A-Z]{2}\d{13}$/; // Adjust this regex as per the regional format
+  if (!dlRegex.test(licenseNumber)) {
+    throw new ApiError(401, "Invalid Driving License number format.");
+  }
 
   // Create a new driver object with validated data
   const newDriver = new DeliveryPartner({
@@ -145,10 +145,12 @@ const RegisterDriver = asyncHandler(async (req, res) => {
 
   const createdDriver = await DeliveryPartner.findById(newDriver._id);
 
-  // const smsId = await sendOtpSMS(phone, otp, name);
-  // if (!smsId) {
-  //   throw new ApiError(500, "Failed to send OTP via SMS");
-  // }
+  const otp = Math.floor(100000 + Math.random() * 900000).toString();
+
+  const smsId = await sendOtpSMS(phone, otp, name);
+  if (!smsId) {
+    throw new ApiError(500, "Failed to send OTP via SMS");
+  }
 
   if (!createdDriver)
     throw new ApiError(
