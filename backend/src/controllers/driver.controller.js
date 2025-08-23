@@ -446,6 +446,7 @@ const ToggleActiveDriver = asyncHandler(async (req, res) => {
   const driver = await DeliveryPartner.findById(driverId);
   if (!driver) throw new ApiError(404, "Driver not found");
 
+  console.log("verificationStatus", driver.verificationStatus);
   if (driver.verificationStatus === DriverVerificationStatus[2]) {
     console.log("Driver Active status: ", driver.isActive);
     driver.isActive = !driver.isActive;
@@ -462,25 +463,17 @@ const ToggleActiveDriver = asyncHandler(async (req, res) => {
     driver.verificationStatus === DriverVerificationStatus[0] ||
     driver.verificationStatus === DriverVerificationStatus[1]
   ) {
-    res
-      .status(200)
-      .json(
-        new ApiResponse(
-          200,
-          driver,
-          "You are not verified yet! Please try to login again after verification"
-        )
-      );
+    throw new ApiError(
+      401,
+      // driver,
+      "You are not verified yet! Please try to login again after verification"
+    );
   } else if (driver.verificationStatus === DriverVerificationStatus[4])
-    res
-      .status(200)
-      .json(
-        new ApiResponse(
-          200,
-          driver,
-          "You id is suspended! Please try to login again after verification"
-        )
-      );
+    throw new ApiError(
+      401,
+      // driver,
+      "You id is suspended! Please try to login again after verification"
+    );
 });
 
 // const UpdateDriverAddress = asyncHandler(async (req, res) => {
