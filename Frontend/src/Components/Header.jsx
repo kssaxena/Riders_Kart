@@ -247,13 +247,13 @@ const Header = () => {
         )}
         {user && user.length > 0 ? (
           user[1].driver === true ? (
-            <div>
+            <div className="flex gap-4">
               <ButtonWrapper
                 onClick={() => {
                   navigate("/all-appointments");
                 }}
               >
-                all appointments
+                All appointments
               </ButtonWrapper>
               <ButtonWrapper
                 onClick={() => {
