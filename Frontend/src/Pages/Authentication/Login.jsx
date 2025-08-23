@@ -74,7 +74,7 @@ const LogIn = ({ startLoading, stopLoading }) => {
         localStorage.setItem("user", "personal");
         socket.emit("joinUsersRoom", response.data.data.user._id);
       } else {
-        navigate("/drivers-home");
+        navigate("/all-appointments");
         Dispatch(
           addUser({
             driver: true,
