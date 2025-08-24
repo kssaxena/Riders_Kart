@@ -14,7 +14,7 @@ const Header = () => {
   const [showHamburger, setShowHamburger] = useState(false);
   const navigate = useNavigate();
   const user = useSelector((store) => store.UserInfo.user);
-  console.log(user);
+  // console.log(user);
   const Dispatch = useDispatch();
 
   // //console.log(user);

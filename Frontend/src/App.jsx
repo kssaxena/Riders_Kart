@@ -79,7 +79,7 @@ const App = () => {
           });
 
           if (User.data.success) {
-            console.log(User);
+            // console.log(User);
             localStorage.clear(); // will clear the all the data from localStorage
             localStorage.setItem(
               "AccessToken",

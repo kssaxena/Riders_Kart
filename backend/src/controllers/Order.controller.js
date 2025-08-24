@@ -356,6 +356,25 @@ const AcceptOrder = asyncHandler(async (req, res) => {
     );
 });
 
+const GetAllAppointments = asyncHandler(async (req, res) => {
+  const { orderIds } = req.body; // expect object with array
+
+  // console.log("orderIds", orderIds);
+
+  if (!orderIds || !Array.isArray(orderIds) || orderIds.length === 0) {
+    throw new ApiError(401, "Order IDs not found");
+  }
+
+  const orders = await Order.find({ _id: { $in: orderIds } });
+
+  if (!orders || orders.length === 0) {
+    throw new ApiError(404, "Orders not found");
+  }
+
+  res.status(200).json(new ApiResponse(200, orders, "Order details"));
+});
+
+
 export {
   AcceptOrder,
   CreateOrder,
@@ -365,4 +384,5 @@ export {
   GetUserAllOrders,
   GetOrderDetails,
   GetAllOrders,
+  GetAllAppointments,
 };

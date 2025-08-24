@@ -15,14 +15,14 @@ function AllAppointments({ startLoading, stopLoading }) {
   const [notifications, setNotifications] = useState([]);
   const navigate = useNavigate();
   const Dispatch = useDispatch();
-  const navigateToCurrentOrder = () => {
-    navigate(`/current-order/${allOrders?._id}`);
+  const navigateToCurrentOrder = (id) => {
+    navigate(`/current-order/${id}`);
   };
   const user = useSelector((store) => store.UserInfo.user);
   const allAppointments = useSelector(
     (store) => store.AllAppointments.allAppointments
   );
-  console.log(allOrders);
+  // console.log(allOrders);
 
   // For socket connection
   useEffect(() => {
@@ -33,7 +33,7 @@ function AllAppointments({ startLoading, stopLoading }) {
 
       // Listen for new order notifications
       socket.on("newOrder", (notification) => {
-        console.log("New order received:", notification);
+        // console.log("New order received:", notification);
         setNotifications(notification);
         Dispatch(addAllAppointment(notification));
       });
@@ -61,12 +61,12 @@ function AllAppointments({ startLoading, stopLoading }) {
       try {
         startLoading();
         const response = await FetchData(
-          `order/get-order-details/${allAppointments}`,
-          "get"
+          "order/get-appointments-details",
+          "post", // use POST
+          { orderIds: allAppointments } // send directly
         );
-        console.log(response);
+        // console.log(response);
         setAllOrders(response.data.data);
-        // alertSuccess("Here is Your Current appointment");
       } catch (err) {
         alertError(parseErrorMessage(err.response.data));
       } finally {
@@ -74,9 +74,12 @@ function AllAppointments({ startLoading, stopLoading }) {
       }
     };
 
-    getCurrentAppointment();
+    if (allAppointments?.length > 0) {
+      getCurrentAppointment();
+    }
   }, [allAppointments]);
-  //  for accepting the appoinment
+
+  //  for accepting the appointment
   const handleAccept = async (appointmentId) => {
     try {
       startLoading();
@@ -85,7 +88,6 @@ function AllAppointments({ startLoading, stopLoading }) {
       //   "post"
       // );
       // console.log(response);
-      console.log(appointmentId);
       navigate(`/drivers-home/${appointmentId}`);
     } catch (err) {
       console.log(err);
@@ -215,6 +217,8 @@ function AllAppointments({ startLoading, stopLoading }) {
         //   })
         //   .catch((error) => console.error(error.message));
 
+        // 👇 dow this code is just for testing remove the below one and uncomment the above one
+
         const response = await FetchData(
           `driver/toggle-active-driver/${user[0]?._id}`,
           "post",
@@ -222,7 +226,7 @@ function AllAppointments({ startLoading, stopLoading }) {
           { coordinates: [77.2224575871163, 28.681199800800137] }
         )
           .then((response) => {
-            console.log("Location Set successfully:", response);
+            // console.log("Location Set successfully:", response);
             console.log("Toggle state & locations sent successfully", {
               location,
             });
@@ -270,85 +274,89 @@ function AllAppointments({ startLoading, stopLoading }) {
   };
 
   return (
-    <div className="mt-10 h-screen">
+    <div className="mt-10 h-fit">
       <ToggleSwitch />
       <div>
         {/* active appointments  */}
         <h1 className="text-center text-4xl ">Active Appointments</h1>
-        <div className="flex justify-center items-center w-full p-10">
+        <div className="flex flex-col justify-center items-center w-full laptop:p-10 phone:p-2 gap-2">
           {allAppointments && allAppointments.length > 0 ? (
-            <div className="flex justify-center items-center w-1/2 bg-neutral-400 rounded-xl p-4">
-              <div
-                className="w-full flex-col gap-4 flex justify-evenly items-start"
-                key={allOrders?._id}
-              >
-                <div className="From flex justify-center items-center gap-3">
-                  <span className="text-sm">From :</span>
-                  <span className=" text-xl">{allOrders?.sender?.address}</span>
-                </div>
+            allOrders?.map((order) => (
+              <div className="flex justify-center items-center laptop:w-1/2 phone:w-full bg-neutral-400 rounded-xl p-4">
+                <div
+                  className="w-full flex-col gap-4 flex justify-evenly items-start"
+                  key={order?._id}
+                >
+                  <div className="From flex justify-center items-center gap-3">
+                    <span className="text-sm">From :</span>
+                    <span className=" text-xl">{order?.sender?.address}</span>
+                  </div>
 
-                <div className="To flex justify-center items-center gap-3">
-                  <span className="text-sm">To : </span>
-                  <span className=" text-xl">
-                    {allOrders?.receiver?.address}
-                  </span>
-                </div>
-                <div className="To flex justify-center items-center gap-3">
-                  <span className="text-sm">Vehicle Needed : </span>
-                  <span className=" text-xl">{allOrders?.vehicle}</span>
-                </div>
-                <div className="To flex gap-4 justify-center items-center ">
-                  <ButtonWrapper
-                    children={"Accept"}
-                    onClick={() => {
-                      handleAccept(allOrders?._id);
-                    }}
-                  />
-                  <ButtonWrapper children={"Reject"} />
+                  <div className="To flex justify-center items-center gap-3">
+                    <span className="text-sm">To : </span>
+                    <span className=" text-xl">{order?.receiver?.address}</span>
+                  </div>
+                  <div className="To flex justify-center items-center gap-3">
+                    <span className="text-sm">Vehicle Needed : </span>
+                    <span className=" text-xl">{order?.vehicle}</span>
+                  </div>
+                  <div className="To flex gap-4 justify-center items-center ">
+                    <ButtonWrapper
+                      children={"Accept"}
+                      onClick={() => {
+                        handleAccept(order?._id);
+                      }}
+                    />
+                    <ButtonWrapper children={"Reject"} />
+                  </div>
                 </div>
               </div>
-            </div>
+            ))
           ) : (
             <p>No Appointment found.</p>
+            // <withLoadingUI />
           )}
         </div>
       </div>
       <div>
         {/* completed appointments  */}
         <h1 className="text-center text-4xl ">Previous Appointments</h1>
-        <div className="flex justify-center items-center w-full p-10">
+        <div className="flex flex-col justify-center items-center w-full laptop:p-10 phone:p-2 gap-2">
           {allAppointments && allAppointments.length > 0 ? (
-            <div className="flex justify-center items-center w-1/2 bg-neutral-400 rounded-xl p-4">
-              <div
-                className="w-full flex-col gap-4 flex justify-evenly items-start"
-                key={allOrders?._id}
-              >
-                <div className="From flex justify-center items-center gap-3">
-                  <span className="text-sm">From :</span>
-                  <span className=" text-xl">{allOrders?.sender?.address}</span>
-                </div>
+            allOrders?.map((order) => (
+              <div className="flex justify-center items-center laptop:w-1/2 phone:w-full bg-neutral-400 rounded-xl p-4">
+                <div
+                  className="w-full flex-col gap-4 flex justify-evenly items-start"
+                  key={order?._id}
+                >
+                  <div className="From flex justify-center items-center gap-3">
+                    <span className="text-sm">From :</span>
+                    <span className=" text-xl">{order?.sender?.address}</span>
+                  </div>
 
-                <div className="To flex justify-center items-center gap-3">
-                  <span className="text-sm">To : </span>
-                  <span className=" text-xl">
-                    {allOrders?.receiver?.address}
-                  </span>
-                </div>
-                <div className="To flex justify-center items-center gap-3">
-                  <span className="text-sm">Vehicle Needed : </span>
-                  <span className=" text-xl">{allOrders?.vehicle}</span>
-                </div>
-                <div className="To flex gap-4 justify-center items-center ">
-                  {/* <ButtonWrapper children={"Accept"} /> */}
-                  <ButtonWrapper
-                    children={"View"}
-                    onClick={navigateToCurrentOrder}
-                  />
+                  <div className="To flex justify-center items-center gap-3">
+                    <span className="text-sm">To : </span>
+                    <span className=" text-xl">{order?.receiver?.address}</span>
+                  </div>
+                  <div className="To flex justify-center items-center gap-3">
+                    <span className="text-sm">Vehicle Needed : </span>
+                    <span className=" text-xl">{order?.vehicle}</span>
+                  </div>
+                  <div className="To flex gap-4 justify-center items-center ">
+                    <ButtonWrapper
+                      children={"View"}
+                      onClick={() => {
+                        navigateToCurrentOrder(order?._id);
+                      }}
+                    />
+                    {/* <ButtonWrapper children={"Reject"} /> */}
+                  </div>
                 </div>
               </div>
-            </div>
+            ))
           ) : (
-            <p>No Appointment found.</p>
+            <p>No previous found.</p>
+            // <withLoadingUI />
           )}
         </div>
       </div>
