@@ -10,16 +10,16 @@ import {
 import { VerifyUser } from "../middlewares/auth.middleware.js";
 
 const router = Router();
-router.use(VerifyUser);
+// router.use(VerifyUser);
 
-router.route("/create-new-order").post(CreateOrder);
-router.route("/get-all-order").get(GetUserAllOrders);
+router.route("/create-new-order").post(VerifyUser, CreateOrder);
+router.route("/get-all-order").get(VerifyUser, GetUserAllOrders);
 router.route("/get-order-details/:orderId").get(GetOrderDetails);
 
 // Additional routes for updating order status and details
 // router.route("/update-order/:orderId").patch(UpdateOrder);
 router.route("/update-order-status/:orderId").patch(UpdateOrderStatus);
 
-router.route("/cancel-order/:orderId").delete(CancelOrder);
+router.route("/cancel-order/:orderId").delete(VerifyUser, CancelOrder);
 
 export default router;
