@@ -75,11 +75,9 @@ const RegisterUser = asyncHandler(async (req, res) => {
    </h3> <b/>`
   );
 
-  const smsId = await sendOtpSMS(
-    number,
-    "Welcome to Rider's Kart. We're excited to have you onboard. Get ready for fast, reliable deliveries at your fingertips.",
-    name
-  );
+  const otp = Math.floor(100000 + Math.random() * 900000).toString();
+
+  const smsId = await sendOtpSMS(number, otp, name);
   if (!smsId) {
     throw new ApiError(500, "Failed to send OTP via SMS");
   }
