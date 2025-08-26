@@ -80,3 +80,11 @@ You will start getting trips immediately. `,
     //       "For any query, you can visit our nearest local office or reach out to us at 4410 4410 (add your city code)",
   },
 ];
+
+export const currentOrderStatus = [
+  { status: "On the way for Order Pickup" },
+  { status: "Order Picked up" },
+  { status: "On the way" },
+  { status: "At Drop address" },
+  { status: "Order Dropped" },
+];

@@ -20,7 +20,7 @@ router.route("/get-appointments-details").post(GetAllAppointments);
 
 // Additional routes for updating order status and details
 // router.route("/update-order/:orderId").patch(UpdateOrder);
-router.route("/update-order-status/:orderId").patch(UpdateOrderStatus);
+router.route("/update-order-status/:orderId").post(UpdateOrderStatus);
 
 router.route("/cancel-order/:orderId").delete(VerifyUser, CancelOrder);
 

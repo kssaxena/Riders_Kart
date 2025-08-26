@@ -1,5 +1,36 @@
 import mongoose, { Schema } from "mongoose";
 
+const StepSchema = new Schema(
+  {
+    title: {
+      type: String,
+      required: true,
+    },
+    status: {
+      type: String,
+      enum: ["pending", "in-progress", "completed"],
+      default: "pending",
+    },
+    completed: {
+      type: Boolean,
+      default: false,
+    },
+    timestamp: {
+      type: Date,
+    },
+    location: {
+      type: {
+        type: String,
+        enum: ["Point"],
+      },
+      coordinates: {
+        type: [Number], // [longitude, latitude]
+      },
+    },
+  },
+  { _id: false }
+);
+
 const orderSchema = new Schema(
   {
     user: {
@@ -135,6 +166,21 @@ const orderSchema = new Schema(
         type: { type: String, enum: ["Point"], required: true },
         coordinates: { type: [Number], required: true }, // [longitude, latitude]
       },
+      steps: {
+        type: [StepSchema], // ✅ new tracking steps field
+        default: [
+          {
+            title: "Order Placed",
+            status: "completed",
+            completed: true,
+            timestamp: Date.now(),
+          },
+          { title: "Picked Up", status: "pending" },
+          { title: "In Transit", status: "pending" },
+          { title: "Out for Delivery", status: "pending" },
+          { title: "Delivered", status: "pending" },
+        ],
+      },
     },
 
     paymentStatus: {
@@ -149,6 +195,8 @@ const orderSchema = new Schema(
 );
 
 orderSchema.index({ senderLocation: "2dsphere" }); // Geospatial index
-orderSchema.index({ receiverLocation: "2dsphere" }); // Optional if you need to search by receiver
+orderSchema.index({ receiverLocation: "2dsphere" }); // Optional if you
+orderSchema.index({ "tracking.current": "2dsphere" });
+// need to search by receiver
 
 export const Order = mongoose.model("Order", orderSchema);
