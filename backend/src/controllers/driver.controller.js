@@ -10,6 +10,7 @@ import { NotificationStructure } from "../utils/NotificationClass.js";
 import { io } from "../app.js";
 import { FindNearbyDrivers } from "./Order.controller.js";
 import { sendOtpSMS } from "../utils/sms.js";
+import apiKeyAuth from "../middlewares/apiKeyAuth.js";
 
 const generateAccessAndRefreshTokens = async (userId) => {
   try {
@@ -540,6 +541,43 @@ const walletRecharge = asyncHandler(async (req, res) => {
     .json(new ApiResponse(200, driver, "Wallet Updated Successfully !"));
 });
 
+const acceptAppointment = asyncHandler(async (req, res) => {
+  const { appointmentId, driverId } = req.params;
+
+  if (!appointmentId || !driverId) {
+    throw new ApiError(400, "Appointment ID and Partner ID are required");
+  }
+
+  // Find order
+  const order = await Order.findById(appointmentId);
+  if (!order) throw new ApiError(404, "Order not found");
+
+  // Find delivery partner
+  const partner = await DeliveryPartner.findById(driverId);
+  if (!partner) throw new ApiError(404, "Delivery Partner not found");
+
+  // Check wallet balance
+  if (partner.wallet < 20) {
+    throw new ApiError(400, "Insufficient wallet balance !");
+  }
+
+  // Update partner: push appointment & deduct wallet
+  partner.allAppointments.push(order._id);
+  partner.wallet -= 10;
+  await partner.save();
+
+  // Update order: assign driver & confirm status
+  order.deliveryPartner = partner._id;
+  order.status = "confirm"; // or "Confirm" if case-sensitive
+  await order.save();
+
+  res
+    .status(200)
+    .json(
+      new ApiResponse(200, order, partner, "Wallet Updated Successfully !")
+    );
+});
+
 export {
   RegisterDriver,
   LoginDriver,
@@ -557,5 +595,6 @@ export {
   ToggleActiveDriver,
   ToggleSuspendPartner,
   walletRecharge,
+  acceptAppointment,
   // UpdateDriverAddress,
 };

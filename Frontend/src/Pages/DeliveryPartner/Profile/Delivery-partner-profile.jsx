@@ -11,11 +11,14 @@ import { useSelector } from "react-redux";
 import { FetchData } from "../../../utility/fetchFromAPI";
 import { alertError, alertSuccess } from "../../../utility/Alert";
 import { parseErrorMessage } from "../../../utility/ErrorMessageParser";
+import { useEffect } from "react";
+import { Link } from "react-router-dom";
+import { formatDateTime } from "../../../utility/FormatDateTime";
 
 function DeliveryPartnerProfile({ startLoading, stopLoading }) {
   const [activeTab, setActiveTab] = useState("orders");
   const user = useSelector((store) => store.UserInfo.user);
-  console.log(user);
+  const [AllOrder, setAllOrders] = useState([]);
   const driver = user?.[0];
   const [activeRechargePopUp, setActiveRechargePopUp] = useState(false);
   const formRef = useRef();
@@ -40,22 +43,31 @@ function DeliveryPartnerProfile({ startLoading, stopLoading }) {
   };
 
   // Dummy data for now (replace with API integration later)
-  const orders = [
-    { id: "ORD001", date: "2023-05-01", status: "Delivered", amount: 25.5 },
-    { id: "ORD002", date: "2023-05-03", status: "Delivered", amount: 30.0 },
-  ];
+  useEffect(() => {
+    const getCurrentAppointment = async () => {
+      try {
+        startLoading();
+        const response = await FetchData(
+          "order/get-appointments-details",
+          "post", // use POST
+          { orderIds: driver?.allAppointments } // send directly
+        );
+        console.log(response);
+        setAllOrders(response.data.data);
+        alertSuccess("Order history fetched successfully !");
+      } catch (err) {
+        alertError(parseErrorMessage(err.response.data));
+      } finally {
+        stopLoading();
+      }
+    };
+
+    getCurrentAppointment();
+  }, [driver]);
+
   const payments = [
     { id: "PAY001", date: "2023-05-02", amount: 71.25 },
     { id: "PAY002", date: "2023-05-04", amount: 30.0 },
-  ];
-  const newRequests = [
-    {
-      id: "REQ001",
-      pickup: "456 Elm St",
-      dropoff: "789 Oak St",
-      distance: "3.2 miles",
-      estimatedEarning: 12.5,
-    },
   ];
 
   const handleRecharge = async () => {
@@ -244,7 +256,7 @@ function DeliveryPartnerProfile({ startLoading, stopLoading }) {
         <div className="mb-4">
           <div className="border-b border-gray-200">
             <nav className="flex space-x-6">
-              {["orders", "payments", "requests"].map((tab) => (
+              {["orders", "payments"].map((tab) => (
                 <button
                   key={tab}
                   className={`${
@@ -264,14 +276,23 @@ function DeliveryPartnerProfile({ startLoading, stopLoading }) {
         {/* Orders */}
         {activeTab === "orders" && (
           <Card title="Order History">
-            <Table headers={["Order ID", "Date", "Status", "Amount"]}>
-              {orders.map((order) => (
-                <tr key={order.id}>
-                  <td className="px-4 py-2 text-sm">{order.id}</td>
-                  <td className="px-4 py-2 text-sm">{order.date}</td>
-                  <td className="px-4 py-2 text-sm">{order.status}</td>
+            <Table headers={["Order ID", "Date (DDMMYY)", "Status", "Action"]}>
+              {AllOrder.map((order) => (
+                <tr key={order?._id}>
+                  <td className="px-4 py-2 text-sm">{order?._id}</td>
                   <td className="px-4 py-2 text-sm">
-                    ${order.amount.toFixed(2)}
+                    {formatDateTime(order?.createdAt)}
+                  </td>
+                  <td className="px-4 py-2 text-sm uppercase">
+                    {order?.status}
+                  </td>
+                  <td className="px-4 py-2 text-sm">
+                    <Link
+                      to={`/current-order/${order._id}`}
+                      className="text-blue-600 hover:underline"
+                    >
+                      View
+                    </Link>
                   </td>
                 </tr>
               ))}
@@ -289,41 +310,6 @@ function DeliveryPartnerProfile({ startLoading, stopLoading }) {
                   <td className="px-4 py-2 text-sm">{payment.date}</td>
                   <td className="px-4 py-2 text-sm">
                     ${payment.amount.toFixed(2)}
-                  </td>
-                </tr>
-              ))}
-            </Table>
-          </Card>
-        )}
-
-        {/* Requests */}
-        {activeTab === "requests" && (
-          <Card title="New Order Requests">
-            <Table
-              headers={[
-                "Request ID",
-                "Pickup",
-                "Dropoff",
-                "Distance",
-                "Est. Earning",
-                "Action",
-              ]}
-            >
-              {newRequests.map((req) => (
-                <tr key={req.id}>
-                  <td className="px-4 py-2 text-sm">{req.id}</td>
-                  <td className="px-4 py-2 text-sm">{req.pickup}</td>
-                  <td className="px-4 py-2 text-sm">{req.dropoff}</td>
-                  <td className="px-4 py-2 text-sm">{req.distance}</td>
-                  <td className="px-4 py-2 text-sm">
-                    ${req.estimatedEarning.toFixed(2)}
-                  </td>
-                  <td className="px-4 py-2 text-sm">
-                    <ButtonWrapper
-                      onClick={() => alert(`Accepted order ${req.id}`)}
-                    >
-                      Accept
-                    </ButtonWrapper>
                   </td>
                 </tr>
               ))}
@@ -351,7 +337,8 @@ function DeliveryPartnerProfile({ startLoading, stopLoading }) {
           <h1>
             On Accepting any order 10 rupee will be deducted from your wallet.
           </h1>
-          <h1>Minimum Balance should be atleast 20 rupee</h1>
+          <h1>Minimum Recharge should be at-least 200 rupee</h1>
+          <h1>Minimum Balance should be at-least 20 rupee</h1>
         </div>
       )}
     </div>

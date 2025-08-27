@@ -8,6 +8,10 @@ import withLoadingUI from "../../../Components/Loading";
 import { FetchData } from "../../../utility/fetchFromAPI";
 import { parseErrorMessage } from "../../../utility/ErrorMessageParser";
 import { addAllAppointment } from "../../../utility/Slice/AllAppointmentsSlice";
+import { IndianRupee } from "lucide-react";
+import Card from "../../../Components/Card";
+import Table from "../../../Components/Table";
+import { formatDateTime } from "../../../utility/FormatDateTime";
 
 const socket = io(process.env.DomainUrl);
 function AllAppointments({ startLoading, stopLoading }) {
@@ -22,18 +26,15 @@ function AllAppointments({ startLoading, stopLoading }) {
   const allAppointments = useSelector(
     (store) => store.AllAppointments.allAppointments
   );
-  // console.log(allOrders);
+  const createdOrders = allOrders?.filter(
+    (order) => order?.status === "created"
+  );
 
   // For socket connection
   useEffect(() => {
     if (socket && user) {
-      // Join the room with the delivery partner's ID
-      // console.log(user);
       socket.emit("DriversRoom", user[0]?._id);
-
-      // Listen for new order notifications
       socket.on("newOrder", (notification) => {
-        // console.log("New order received:", notification);
         setNotifications(notification);
         Dispatch(addAllAppointment(notification));
       });
@@ -83,19 +84,20 @@ function AllAppointments({ startLoading, stopLoading }) {
   const handleAccept = async (appointmentId) => {
     try {
       startLoading();
-      // const response = await FetchData(
-      //   `order/get-order-details/${appointmentId}`,
-      //   "post"
-      // );
-      // console.log(response);
+      const response = await FetchData(
+        `driver/accept-appointment/${appointmentId}/${user[0]?._id}`,
+        "post"
+      );
+      console.log(response);
       navigate(`/drivers-home/${appointmentId}`);
     } catch (err) {
       console.log(err);
-      // alertError(parseErrorMessage(err.response.data));
+      alertError(parseErrorMessage(err.response.data));
     } finally {
       stopLoading();
     }
   };
+
   // toggle switch active and inactive
   const ToggleSwitch = () => {
     const [isActive, setIsActive] = useState(user?.[0]?.isActive || false);
@@ -277,44 +279,57 @@ function AllAppointments({ startLoading, stopLoading }) {
     <div className="mt-10 h-fit">
       <ToggleSwitch />
       <div>
+        <h1 className="flex justify-center items-center gap-2">
+          Current Wallet Balance:{" "}
+          <span className="bg-[#DF3F33] px-2 py-1 rounded-2xl w-fit text-white flex justify-center items-center">
+            <IndianRupee /> {user?.[0]?.wallet}
+          </span>
+        </h1>
+      </div>
+      <div>
         {/* active appointments  */}
         <h1 className="text-center text-4xl ">Active Appointments</h1>
         <div className="flex flex-col justify-center items-center w-full laptop:p-10 phone:p-2 gap-2">
           {allAppointments && allAppointments.length > 0 ? (
-            allOrders?.map((order) => (
-              <div className="flex justify-center items-center laptop:w-1/2 phone:w-full bg-neutral-400 rounded-xl p-4">
+            createdOrders && createdOrders.length > 0 ? (
+              createdOrders.map((order) => (
                 <div
-                  className="w-full flex-col gap-4 flex justify-evenly items-start"
                   key={order?._id}
+                  className="flex justify-center items-center laptop:w-1/2 phone:w-full bg-neutral-400 rounded-xl p-4"
                 >
-                  <div className="From flex justify-center items-center gap-3">
-                    <span className="text-sm">From :</span>
-                    <span className=" text-xl">{order?.sender?.address}</span>
-                  </div>
+                  <div className="w-full flex-col gap-4 flex justify-evenly items-start">
+                    <div className="From flex justify-center items-center gap-3">
+                      <span className="text-sm">From :</span>
+                      <span className="text-xl">{order?.sender?.address}</span>
+                    </div>
 
-                  <div className="To flex justify-center items-center gap-3">
-                    <span className="text-sm">To : </span>
-                    <span className=" text-xl">{order?.receiver?.address}</span>
-                  </div>
-                  <div className="To flex justify-center items-center gap-3">
-                    <span className="text-sm">Vehicle Needed : </span>
-                    <span className=" text-xl">{order?.vehicle}</span>
-                  </div>
-                  <div className="To flex gap-4 justify-center items-center ">
-                    <ButtonWrapper
-                      children={"Accept"}
-                      onClick={() => {
-                        handleAccept(order?._id);
-                      }}
-                    />
-                    <ButtonWrapper children={"Reject"} />
+                    <div className="To flex justify-center items-center gap-3">
+                      <span className="text-sm">To :</span>
+                      <span className="text-xl">
+                        {order?.receiver?.address}
+                      </span>
+                    </div>
+
+                    <div className="To flex justify-center items-center gap-3">
+                      <span className="text-sm">Vehicle Needed :</span>
+                      <span className="text-xl">{order?.vehicle}</span>
+                    </div>
+
+                    <div className="To flex gap-4 justify-center items-center ">
+                      <ButtonWrapper
+                        children={"Accept"}
+                        onClick={() => handleAccept(order?._id)}
+                      />
+                      <ButtonWrapper children={"Reject"} />
+                    </div>
                   </div>
                 </div>
-              </div>
-            ))
+              ))
+            ) : (
+              <p>No Appointment found.</p>
+            )
           ) : (
             <p>No Appointment found.</p>
-            // <withLoadingUI />
           )}
         </div>
       </div>
@@ -322,42 +337,29 @@ function AllAppointments({ startLoading, stopLoading }) {
         {/* completed appointments  */}
         <h1 className="text-center text-4xl ">Previous Appointments</h1>
         <div className="flex flex-col justify-center items-center w-full laptop:p-10 phone:p-2 gap-2">
-          {allAppointments && allAppointments.length > 0 ? (
-            allOrders?.map((order) => (
-              <div className="flex justify-center items-center laptop:w-1/2 phone:w-full bg-neutral-400 rounded-xl p-4">
-                <div
-                  className="w-full flex-col gap-4 flex justify-evenly items-start"
-                  key={order?._id}
-                >
-                  <div className="From flex justify-center items-center gap-3">
-                    <span className="text-sm">From :</span>
-                    <span className=" text-xl">{order?.sender?.address}</span>
-                  </div>
-
-                  <div className="To flex justify-center items-center gap-3">
-                    <span className="text-sm">To : </span>
-                    <span className=" text-xl">{order?.receiver?.address}</span>
-                  </div>
-                  <div className="To flex justify-center items-center gap-3">
-                    <span className="text-sm">Vehicle Needed : </span>
-                    <span className=" text-xl">{order?.vehicle}</span>
-                  </div>
-                  <div className="To flex gap-4 justify-center items-center ">
-                    <ButtonWrapper
-                      children={"View"}
-                      onClick={() => {
-                        navigateToCurrentOrder(order?._id);
-                      }}
-                    />
-                    {/* <ButtonWrapper children={"Reject"} /> */}
-                  </div>
-                </div>
-              </div>
-            ))
-          ) : (
-            <p>No previous found.</p>
-            // <withLoadingUI />
-          )}
+          <Card title="Order History" className="w-full">
+            <Table headers={["Order ID", "Date (DDMMYY)", "Status", "Action"]}>
+              {allOrders?.map((order) => (
+                <tr key={order?._id}>
+                  <td className="px-4 py-2 text-sm">{order?._id}</td>
+                  <td className="px-4 py-2 text-sm">
+                    {formatDateTime(order?.createdAt)}
+                  </td>
+                  <td className="px-4 py-2 text-sm uppercase">
+                    {order?.status}
+                  </td>
+                  <td className="px-4 py-2 text-sm">
+                    <Link
+                      to={`/current-order/${order._id}`}
+                      className="text-blue-600 hover:underline"
+                    >
+                      View
+                    </Link>
+                  </td>
+                </tr>
+              ))}
+            </Table>
+          </Card>
         </div>
       </div>
     </div>

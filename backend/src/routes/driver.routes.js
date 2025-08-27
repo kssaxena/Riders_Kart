@@ -1,5 +1,6 @@
 import { Router } from "express";
 import {
+  acceptAppointment,
   GetActiveOrder,
   GetDriver,
   LoginDriver,
@@ -49,6 +50,10 @@ router.route("/subscribe").post(Subscribe); // body =
 router.route("/toggle-active-driver/:driverId").post(ToggleActiveDriver); // body = {[longitude, latitude]}
 
 router.route("/toggle-suspend-partner/:partnerId").post(ToggleSuspendPartner); // body = {}
+
+router
+  .route("/accept-appointment/:appointmentId/:driverId")
+  .post(acceptAppointment); // body = {}
 
 router.route("/add-money/:partnerId").post(walletRecharge); // body = {}
 

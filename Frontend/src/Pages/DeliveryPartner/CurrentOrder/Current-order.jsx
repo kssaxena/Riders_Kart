@@ -169,11 +169,11 @@ function CurrentProduct({ startLoading, stopLoading }) {
           </Card>
         </div>
 
-        <div className="mt-6 text-center">
+        {/* <div className="mt-6 text-center">
           <ButtonWrapper className="bg-blue-600 text-white px-6 py-2 rounded-full hover:bg-blue-700 transition-colors">
             Track Parcel
           </ButtonWrapper>
-        </div>
+        </div> */}
       </div>
     </div>
   );
