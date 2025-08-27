@@ -52,6 +52,7 @@ function DeliveryPartnerHome({ startLoading, stopLoading }) {
   const deliveryPartner = user?.[0];
   const [CurrentPartner, setPartner] = useState(null);
   const [currentOrder, setCurrentOrder] = useState();
+  console.log(currentOrder);
 
   useEffect(() => {
     const getCurrentAppointment = async () => {
@@ -61,7 +62,7 @@ function DeliveryPartnerHome({ startLoading, stopLoading }) {
           `order/get-order-details/${appointmentId}`,
           "get"
         );
-        console.log(response);
+        // console.log(response);
         setCurrentOrder(response.data.data);
         // alertSuccess("Here is Your Current appointment");
       } catch (err) {
@@ -166,6 +167,21 @@ function DeliveryPartnerHome({ startLoading, stopLoading }) {
     );
   };
 
+  const Card = ({ statusDiv }) => {
+    return (
+      <div className="flex lg:m-10 m-5 rounded-xl h-fit relative w-fit">
+        <div className=" shadow-2xl shadow-black/50 rounded-xl ">
+          {statusDiv}
+        </div>
+        <div className="absolute w-full h-full top-0 left-0 py-auto">
+          <h1 className="laptop:text-2xl phone:text-base h-full drop-shadow-2xl w-full flex justify-center items-center text-white bg-black/70 rounded-xl font-Cinzel tracking-widest uppercase">
+            🎉 This order is Completed
+          </h1>
+        </div>
+      </div>
+    );
+  };
+
   return !currentOrder ? (
     <withLoadingUI />
   ) : (
@@ -222,59 +238,111 @@ function DeliveryPartnerHome({ startLoading, stopLoading }) {
         </div>
       </div>
 
-      <div className="rounded-3xl overflow-hidden">
-        <div className="p-6 flex flex-col gap-5 justify-center items-center ">
-          <h2 className="text-2xl">Current Order Status</h2>
+      {currentOrder?.status === "order dropped" ? (
+        <div className="flex justify-center items-center w-full">
+          <Card
+            statusDiv={
+              <div className="rounded-3xl overflow-hidden opacity-50 w-full">
+                <div className="p-6 flex flex-col gap-5 justify-center items-center ">
+                  <h2 className="text-2xl">Current Order Status</h2>
 
-          <div className="space-y-4">
-            {steps.map((step, index) => (
-              <div
-                key={index}
-                className="flex items-center justify-between bg-neutral-300 laptop:p-1 phone:p-1 rounded-full phone:text-sm laptop:text-base hover:drop-shadow-xl transition duration-150 ease-in-out w-full"
-              >
-                {/* Status */}
-                <div
-                  className={`${
-                    step.completed ? "bg-green-500 text-white" : "bg-white"
-                  } laptop:py-2 laptop:px-4 phone:px-2 phone:py-1 rounded-full laptop:w-52 phone:w-fit text-center font-semibold`}
-                >
-                  {step.status}
-                </div>
+                  <div className="space-y-4">
+                    {steps.map((step, index) => (
+                      <div
+                        key={index}
+                        className="flex items-center justify-between bg-neutral-300 laptop:p-1 phone:p-1 rounded-full phone:text-sm laptop:text-base hover:drop-shadow-xl transition duration-150 ease-in-out w-full"
+                      >
+                        {/* Status */}
+                        <div
+                          className={`${
+                            step.completed
+                              ? "bg-green-500 text-white"
+                              : "bg-white"
+                          } laptop:py-2 laptop:px-4 phone:px-2 phone:py-1 rounded-full laptop:w-52 phone:w-fit text-center font-semibold`}
+                        >
+                          {step.status}
+                        </div>
 
-                {/* center line */}
-                <div className="flex mx-4 w-[50vw] border hidden laptop:block">
-                  <div className="h-0.5 bg-white w-full relative">
-                    <div className="absolute -left-1.5 -top-1.5 w-3 h-3 rounded-full bg-white" />
-                    <div className="absolute -right-1.5 -top-1.5 w-3 h-3 rounded-full bg-white" />
+                        {/* center line */}
+                        <div className="flex mx-4 w-[50vw] border hidden laptop:block">
+                          <div className="h-0.5 bg-white w-full relative">
+                            <div className="absolute -left-1.5 -top-1.5 w-3 h-3 rounded-full bg-white" />
+                            <div className="absolute -right-1.5 -top-1.5 w-3 h-3 rounded-full bg-white" />
+                          </div>
+                        </div>
+
+                        {/* Check Button */}
+                        <div className="flex items-center gap-3 font-medium">
+                          <ButtonWrapper
+                            key={index}
+                            className={`px-3 py-1 rounded-full border transition bg-green-600 text-white cursor-not-allowed`}
+                            children={step.completed ? "✔" : "Confirm"}
+                            disabled={step.completed || loading} // disable while updating
+                          />
+                        </div>
+                      </div>
+                    ))}
                   </div>
                 </div>
-
-                {/* Check Button */}
-                <div className="flex items-center gap-3 font-medium">
-                  <ButtonWrapper
-                    key={index}
-                    className={`px-3 py-1 rounded-full border transition ${
-                      step.completed
-                        ? "bg-green-600 text-white cursor-not-allowed"
-                        : "hover:bg-green-500 hover:text-white"
-                    }`}
-                    children={step.completed ? "✔" : "Confirm"}
-                    onClick={() =>
-                      dispatch(
-                        updateOrderStatusAsync({
-                          appointmentId,
-                          status: step.status,
-                        })
-                      )
-                    }
-                    disabled={step.completed || loading} // disable while updating
-                  />
-                </div>
               </div>
-            ))}
+            }
+          />
+        </div>
+      ) : (
+        <div className="rounded-3xl overflow-hidden">
+          <div className="p-6 flex flex-col gap-5 justify-center items-center ">
+            <h2 className="text-2xl">Current Order Status</h2>
+
+            <div className="space-y-4">
+              {steps.map((step, index) => (
+                <div
+                  key={index}
+                  className="flex items-center justify-between bg-neutral-300 laptop:p-1 phone:p-1 rounded-full phone:text-sm laptop:text-base hover:drop-shadow-xl transition duration-150 ease-in-out w-full"
+                >
+                  {/* Status */}
+                  <div
+                    className={`${
+                      step.completed ? "bg-green-500 text-white" : "bg-white"
+                    } laptop:py-2 laptop:px-4 phone:px-2 phone:py-1 rounded-full laptop:w-52 phone:w-fit text-center font-semibold`}
+                  >
+                    {step.status}
+                  </div>
+
+                  {/* center line */}
+                  <div className="flex mx-4 w-[50vw] border hidden laptop:block">
+                    <div className="h-0.5 bg-white w-full relative">
+                      <div className="absolute -left-1.5 -top-1.5 w-3 h-3 rounded-full bg-white" />
+                      <div className="absolute -right-1.5 -top-1.5 w-3 h-3 rounded-full bg-white" />
+                    </div>
+                  </div>
+
+                  {/* Check Button */}
+                  <div className="flex items-center gap-3 font-medium">
+                    <ButtonWrapper
+                      key={index}
+                      className={`px-3 py-1 rounded-full border transition ${
+                        step.completed
+                          ? "bg-green-600 text-white cursor-not-allowed"
+                          : "hover:bg-green-500 hover:text-white"
+                      }`}
+                      children={step.completed ? "✔" : "Confirm"}
+                      onClick={() =>
+                        dispatch(
+                          updateOrderStatusAsync({
+                            appointmentId,
+                            status: step.status,
+                          })
+                        )
+                      }
+                      disabled={step.completed || loading} // disable while updating
+                    />
+                  </div>
+                </div>
+              ))}
+            </div>
           </div>
         </div>
-      </div>
+      )}
     </div>
   );
 }

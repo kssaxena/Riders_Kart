@@ -12,7 +12,7 @@ export const updateOrderStatusAsync = createAsyncThunk(
         "post",
         { status }
       );
-      console.log(response);
+      // console.log(response);
 
       return response.data.data; // contains updated order with new status
     } catch (err) {
@@ -30,7 +30,7 @@ export const fetchOrderById = createAsyncThunk(
         `order/get-order-details/${appointmentId}`, // 🔹 make sure this endpoint exists
         "get"
       );
-      console.log(response);
+      // console.log(response);
       return response.data.data; // this will have `status`
     } catch (err) {
       return rejectWithValue(err.response?.data || err.message);
@@ -63,7 +63,7 @@ const orderStatusSlice = createSlice({
       })
       .addCase(updateOrderStatusAsync.fulfilled, (state, action) => {
         state.loading = false;
-        console.log("UPDATE RESPONSE", action.payload);
+        // console.log("UPDATE RESPONSE", action.payload);
         const updatedStatus = action.payload.status; // backend status
 
         const statusIndex = currentOrderStatus.findIndex((s) =>
@@ -84,7 +84,7 @@ const orderStatusSlice = createSlice({
       })
       .addCase(fetchOrderById.fulfilled, (state, action) => {
         const order = action.payload;
-        console.log(order);
+        // console.log(order);
         const statusIndex = currentOrderStatus.findIndex(
           (s) => s?.status?.toLowerCase() === order?.status?.toLowerCase()
         );
