@@ -29,13 +29,10 @@ function DeliveryPartnerHome({ startLoading, stopLoading }) {
   const dispatch = useDispatch();
   const { steps, loading } = useSelector((store) => store.orderStatus);
 
-  // const currentOrderStatus = [
-  //   { status: "On the way for Order Pickup" },
-  //   { status: "Order Picked up" },
-  //   { status: "On the way" },
-  //   { status: "At Drop address" },
-  //   { status: "Order Dropped" },
-  // ];
+  const orderConfirm = () => {
+    alertSuccess("Order Delivered Successfully !");
+    window.location.reload();
+  };
 
   // initialize steps in Redux once
   useEffect(() => {
@@ -237,6 +234,21 @@ function DeliveryPartnerHome({ startLoading, stopLoading }) {
           </div>
         </div>
       </div>
+      {/* <div className="w-full justify-center items-center flex ">
+        {console.log(steps)}
+        {currentOrder?.status === "order dropped" ? (
+          <ButtonWrapper
+            children={"Order dropped 🎉! click here to confirm"}
+            onClick={() => orderConfirm()}
+          />
+        ) : (
+          <ButtonWrapper
+            className={`cursor-not-allowed bg-black/20 `}
+            children={"Click here to confirm when order is dropped"}
+            disabled
+          />
+        )}
+      </div> */}
 
       {currentOrder?.status === "order dropped" ? (
         <div className="flex justify-center items-center w-full">
