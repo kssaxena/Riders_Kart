@@ -173,6 +173,10 @@ const deliveryPartnerSchema = new Schema(
       default: true,
     },
 
+    wallet: {
+      type: Number,
+    },
+
     currentLocation: {
       type: { type: String, enum: ["Point"], default: "Point" },
       coordinates: { type: [Number] }, // [longitude, latitude]

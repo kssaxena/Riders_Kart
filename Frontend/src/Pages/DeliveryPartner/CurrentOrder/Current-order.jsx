@@ -5,30 +5,55 @@ import { useParams } from "react-router-dom";
 import { useEffect, useState } from "react";
 import { FetchData } from "../../../utility/fetchFromAPI";
 import Loader from "../../../Components/Loader";
+import { parseErrorMessage } from "../../../utility/ErrorMessageParser";
+import { alertError, alertSuccess } from "../../../utility/Alert";
+import withLoadingUI from "../../../Components/Loading";
 
-export default function CurrentProduct() {
+function CurrentProduct({ startLoading, stopLoading }) {
   const { orderId } = useParams();
   const [currentOrder, setCurrentOrder] = useState(null);
+  console.log(currentOrder);
 
   // Functions
 
-  useEffect(() => {
-    async function getCurrentOrder(orderId) {
-      const Orders = await FetchData(
-        `order/get-order-details/${orderId}`,
-        "get"
-      );
-      //console.log(Orders);
-      setCurrentOrder(Orders?.data?.data);
-      return Orders;
-    }
+  // useEffect(() => {
+  //   async function getCurrentOrder(orderId) {
+  //     const Orders = await FetchData(
+  //       `order/get-order-details/${orderId}`,
+  //       "get"
+  //     );
+  //     //console.log(Orders);
+  //     setCurrentOrder(Orders?.data?.data);
+  //     return Orders;
+  //   }
 
-    getCurrentOrder(orderId);
+  //   getCurrentOrder(orderId);
+  // }, []);
+
+  useEffect(() => {
+    const getCurrentOrder = async () => {
+      try {
+        startLoading();
+        const response = await FetchData(
+          `order/get-order-details/${orderId}`,
+          "get"
+        );
+        setCurrentOrder(response.data.data);
+        alertSuccess(response.data.data.status);
+      } catch (err) {
+        console.log(err);
+        alertError(parseErrorMessage(err.response.data.data));
+      } finally {
+        stopLoading();
+      }
+    };
+
+    getCurrentOrder();
+    // if (currentOrder?.length > 0) {
+    // }
   }, []);
 
-  return !currentOrder ? (
-    <Loader />
-  ) : (
+  return (
     <div className="min-h-screen bg-gray-100 p-4 phone:p-6 lg:p-8">
       <div className="max-w-[80vw] mx-auto">
         <h1 className="text-3xl font-bold mb-6 text-center text-gray-800">
@@ -153,3 +178,5 @@ export default function CurrentProduct() {
     </div>
   );
 }
+
+export default withLoadingUI(CurrentProduct);

@@ -515,6 +515,31 @@ const ToggleActiveDriver = asyncHandler(async (req, res) => {
 //   res.status(200).json(new ApiResponse(200, driver, "Driver address updated"));
 // });
 
+const walletRecharge = asyncHandler(async (req, res) => {
+  const { partnerId } = req.params;
+  const { rechargeAmount } = req.body;
+
+  if (!partnerId || !rechargeAmount)
+    throw new ApiError(404, "Id and Amount is required to process !");
+
+  const driver = await DeliveryPartner.findById(partnerId);
+  if (!driver) throw new ApiError(404, "Partner not found");
+
+  // Initialize wallet if it doesn't exist
+  if (!driver.wallet) {
+    driver.wallet = 0;
+  }
+
+  driver.wallet += Number(rechargeAmount);
+
+  await driver.save();
+  console.log("Wallet Controller", driver);
+
+  res
+    .status(200)
+    .json(new ApiResponse(200, driver, "Wallet Updated Successfully !"));
+});
+
 export {
   RegisterDriver,
   LoginDriver,
@@ -531,5 +556,6 @@ export {
   DeletePartner,
   ToggleActiveDriver,
   ToggleSuspendPartner,
+  walletRecharge,
   // UpdateDriverAddress,
 };
