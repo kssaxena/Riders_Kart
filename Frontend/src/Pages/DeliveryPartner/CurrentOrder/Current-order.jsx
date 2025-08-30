@@ -14,8 +14,6 @@ function CurrentProduct({ startLoading, stopLoading }) {
   const [currentOrder, setCurrentOrder] = useState(null);
   console.log(currentOrder);
 
-  // Functions
-
   // useEffect(() => {
   //   async function getCurrentOrder(orderId) {
   //     const Orders = await FetchData(
